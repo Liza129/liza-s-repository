@@ -85,4 +85,20 @@ def addToBi(b1,b2):
     response = sum_bi
     return response
 
-
+def hexToDec(h):
+    x = 0
+    mult = 0
+    dec_h_n = 0
+    h_0 = h[::-1]
+    letters = ["A","B","C","D","E","F"]
+    numbers = [10,11,12,13,14,15]
+    for i in h_0:
+        if i in letters:
+            x = letters.index(i)
+            i = numbers[x]
+        else:
+            i = int(i)
+            dec_h_n += i * 16^mult
+            mult += 1
+    response = dec_h_n
+    return response
