@@ -19,9 +19,24 @@ while user_ans != 8:
         h = input("Enter a hexadecimal number: ")
         dec_h_n = functions_binary_and_dicimals.hexToDec(h)
         print("The decimal number will be: ", dec_h_n)
+    elif user_ans == 5:
+        d_h = int(input("Enter a decimal number: "))
+        hexid = functions_binary_and_dicimals.decimalToHex(d_h)
+        print("The hexadecimal number will be: ", hexid)
+    elif user_ans == 6:
+        h_b = input("Enter a hexadecimal number: ")
+        bin_h = functions_binary_and_dicimals.hexToBin(h_b)
+        print("The binary number will be: ", bin_h)
+    elif user_ans == 7:
+        b_h = input("Enter a binary number: ")
+        dex = functions_binary_and_dicimals.binToHex(b_h)
+        print("The binary number", b_h, "is", dex, "in decimal form")
     user_ans = int(input("if you want to convert a binary number to a decimal, enter 1. \nDecimal to a binary, enter 2. \nAdd two binary numbers, enter 3. \nHexadecimals to decimals, enter 4. \n Decimals to hexadecimals, enter 5. \nHexadecimals to binary, enter 6. \nBinary to hexadecimals, enter 7.\n And if you want to finish, enter 8. \n "))
+    
 print("Good bye!")
     
+    
+     
     
      
     
