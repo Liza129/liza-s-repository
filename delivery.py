@@ -40,6 +40,8 @@ def get_bill_total(total_price):
         response = "The delivery is free"
     return total_price_U, response, total_price
 total_price_U, response, total_price = get_bill_total(total_price)
+total_price = str(round(total_price,2))
+total_price_U = str(round(total_price_U,2))
 print("The total price of an order will be: ", total_price_U)
 print(response)
         
