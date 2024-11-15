@@ -1,50 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lizzzzaaa</title>
-    <link rel="stylesheet" href="index.css">
-</head>
-<body style="background-color:rgb(3, 0, 155);">
-    <p>Recipe Book</p>
-    <div>
-    <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Recipes</a></li>
-        <li><a href="#">Tips</a></li>
-        <li><a href="#">Contributors</a></li>
-        <li><a href="#">About</a></li>
-    </ul>
-    <h1>Carrot and Kale Salad</h1>
-    <h2>Submitted by John Doe</h2>
-    </div>
-    <img src="salad.jpg" alt="errorrrrr">
-    <p>This salad is a great spicy treat to go along with any meal. I like to add extra Sriracha to the salad for
-        added spice. This recipe is gluten free. Sriracha contains anchovies, so it's not quite vegetarian or vegan.</p>
-    <h3>Ingredients</h3>
-    <ul class="second">
-        <li>3 cups carrot strings using a julienne peeler</li>
-        <li> 2 cups thinly sliced tuscan kale (also called Lacinato kale)</li> 
-        <li>3 tablespoons creamy peanut butter</li>
-        <li>  1 tablespoons Sriracha (less if you're sensitive to spice)</li>
-        <li>3 tablespoons almond milk</li>
-        <li>.5 teaspoon sesame oil</li>
-        <li> .5 teaspoon extra virgin olive oil</li>
-        <li>.5 teaspoon apple cider vinegar</li>
-        <li> .5 tablespoon maple syrup</li>
-        <li>.5 teaspoon freshly grated ginger</li>
-        <li>pinch of salt</li>
-        <li>sesame seeds for garnish</li>
-    </ul>
-    <h3>Instructions</h3>
-    <ol class="second">
-        <li>Toss carrots and kale together in a large bowl</li>
-        <li>. Whisk together the remaining ingredients except sesame seeds in a small bowl. Add more milk if necessary to get the desired consistency</li>
-        <li>Pour dressing on top of the carrots and kale and toss until fully coated.</li>
-        <li> Garnish with sesame seeds and serve.</li>
-    </ol>
-    <p id="first">Adapted from a website</p>
-</body>
+  <head>
+    <title>HTML Practice</title>
+    <meta charset="utf-8" />
+  </head>
+  <body>
+    <form id="practice_form">
+      <textarea
+        id="generalInput"
+        name="generalInput"
+        rows="4"
+        cols="50"
+      ></textarea>
+      <br />
+      <textarea
+        id="secondInput"
+        name="secondInput"
+        rows="4"
+        cols="50"
+      ></textarea>
+
+      <br />
+      <button id="btn" type="submit">OK</button>
+      <button id="bob" type="reset">reset form</button>
+    </form>
+    <script>
+      //Part 1
+      let formSubmission = document.getElementById("practice_form");
+      let xvalues = null;
+      let yvalues = null;
+      function preventDefaultSubmission(event) {
+        event.preventDefault();
+        console.log("form submitted");
+        let textInput = document.getElementById("generalInput");
+        let textInput2 = document.getElementById("secondInput");
+        let userData = textInput.value;
+        let userData2 = textInput2.value;
+        xvalues = userData.split(" ");
+        yvalues = userData2.split(" ");
+        //console.log(xvalues);
+        //console.log(yvalues);
+        //console.log(userData.split(" "));
+        // Line of best fit
+
+        lineOfBestFit(xvalues, yvalues);
+      }
+
+      formSubmission.addEventListener("submit", preventDefaultSubmission);
+      function lineOfBestFit(xvalues, yvalues) {
+        let n = xvalues.length;
+        let sum = 0;
+        for (i of xvalues) {
+          i = Number(i);
+          sum += i;
+        }
+        let meanx = sum / n;
+        let sum2 = 0;
+        for (i of yvalues) {
+          i = Number(i);
+          sum2 += i;
+        }
+        let meany = sum2 / n;
+        //console.log(meanx, meany);
+        //let top = Number(sum - (10*meanx))*(sum2 - (10*meany));
+        //let bottom = Number((sum - (10*meanx))**2);
+        let altXvalues = [];
+        //for (let i = 0,  j = 0; i < xvalues.length; i = i + 1, j = j +1)
+        for (i of xvalues) {
+          i = Number(i);
+          i = i - meanx;
+          altXvalues.push(i);
+        }
+        //console.log(altXvalues);
+        let altYvalues = [];
+        for (i of yvalues) {
+          i = Number(i);
+          i = i - meany;
+          altYvalues.push(i);
+        }
+        //console.log(altYvalues);
+        let topList = [];
+        let variable = 0;
+        for (let i = 0; i < altXvalues.length; i = i + 1) {
+          variable = altXvalues[i] * altYvalues[i];
+          topList.push(variable);
+          variable = 0;
+        }
+        let top = 0;
+        for (i of topList) {
+          i = Number(i);
+          top += i;
+        }
+        let bottomXvalues = [];
+        for (i of altXvalues) {
+          i = Number(i);
+          i = i ** 2;
+          bottomXvalues.push(i);
+        }
+        //console.log(bottomXvalues);
+
+        let bottom = 0;
+
+        for (i of bottomXvalues) {
+          i = Number(i);
+          bottom += i;
+        }
+        //console.log(top, bottom);
+        let m = Number(top / bottom);
+        //console.log(m);
+        let b = meany - m * meanx;
+        //console.log(b);
+        let equation = "y = " + m.toFixed(1) + "x + " + b.toFixed(1);
+        console.log(equation);
+      }
+    </script>
+  </body>
 </html>
