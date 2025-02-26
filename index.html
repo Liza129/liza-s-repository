@@ -1,117 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>HTML Practice</title>
-    <meta charset="utf-8" />
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Population</title>
   </head>
+
   <body>
-    <form id="practice_form">
-      <textarea
-        id="generalInput"
-        name="generalInput"
-        rows="4"
-        cols="50"
-      ></textarea>
-      <br />
-      <textarea
-        id="secondInput"
-        name="secondInput"
-        rows="4"
-        cols="50"
-      ></textarea>
+    <nav>
+      <a href="./survey.html" target="_blank">Survey</a>
+      <a href="./Recommendations.html" target="_blank">Recommendations</a>
+    </nav>
 
-      <br />
-      <button id="btn" type="submit">OK</button>
-      <button id="bob" type="reset">reset form</button>
-    </form>
-    <script>
-      //Part 1
-      let formSubmission = document.getElementById("practice_form");
-      let xvalues = null;
-      let yvalues = null;
-      function preventDefaultSubmission(event) {
-        event.preventDefault();
-        console.log("form submitted");
-        let textInput = document.getElementById("generalInput");
-        let textInput2 = document.getElementById("secondInput");
-        let userData = textInput.value;
-        let userData2 = textInput2.value;
-        xvalues = userData.split(" ");
-        yvalues = userData2.split(" ");
-        //console.log(xvalues);
-        //console.log(yvalues);
-        //console.log(userData.split(" "));
-        // Line of best fit
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 
-        lineOfBestFit(xvalues, yvalues);
+    <label for="cars">Choose a country to show its density:</label>
+    <select name="countries" id="selectElementId" multiple>
+      <option value="all">All</option>
+    </select>
+
+    <canvas id="myChart" style="width: 100%; max-width: 700px;"></canvas>
+
+    <canvas id="myChart2" style="width: 100%; max-width: 700px;"></canvas>
+
+    <script type="module">
+      const firebaseConfig = {
+        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
+        authDomain: 'project-cb978.firebaseapp.com',
+        databaseURL:
+          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
+        projectId: 'project-cb978',
+        storageBucket: 'project-cb978.firebasestorage.app',
+        messagingSenderId: '396597845049',
+        appId: '1:81524826446:web:596f420c323372555ebe1f',
       }
 
-      formSubmission.addEventListener("submit", preventDefaultSubmission);
-      function lineOfBestFit(xvalues, yvalues) {
-        let n = xvalues.length;
-        let sum = 0;
-        for (i of xvalues) {
-          i = Number(i);
-          sum += i;
-        }
-        let meanx = sum / n;
-        let sum2 = 0;
-        for (i of yvalues) {
-          i = Number(i);
-          sum2 += i;
-        }
-        let meany = sum2 / n;
-        //console.log(meanx, meany);
-        //let top = Number(sum - (10*meanx))*(sum2 - (10*meany));
-        //let bottom = Number((sum - (10*meanx))**2);
-        let altXvalues = [];
-        //for (let i = 0,  j = 0; i < xvalues.length; i = i + 1, j = j +1)
-        for (i of xvalues) {
-          i = Number(i);
-          i = i - meanx;
-          altXvalues.push(i);
-        }
-        //console.log(altXvalues);
-        let altYvalues = [];
-        for (i of yvalues) {
-          i = Number(i);
-          i = i - meany;
-          altYvalues.push(i);
-        }
-        //console.log(altYvalues);
-        let topList = [];
-        let variable = 0;
-        for (let i = 0; i < altXvalues.length; i = i + 1) {
-          variable = altXvalues[i] * altYvalues[i];
-          topList.push(variable);
-          variable = 0;
-        }
-        let top = 0;
-        for (i of topList) {
-          i = Number(i);
-          top += i;
-        }
-        let bottomXvalues = [];
-        for (i of altXvalues) {
-          i = Number(i);
-          i = i ** 2;
-          bottomXvalues.push(i);
-        }
-        //console.log(bottomXvalues);
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
+      const app = initializeApp(firebaseConfig)
+      import {
+        getDatabase,
+        ref,
+        set,
+        get,
+        update,
+        child,
+        query,
+        orderByChild,
+      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
+      const database = getDatabase()
+      const firebaseRef = ref(database)
 
-        let bottom = 0;
+      function addDataToChart() {
+        let x_axis_density = []
+        let y_axis_density = []
+        let x_axis_stn_dev = []
+        let y_axis_stn_dev = []
+        let Country_list = []
+        get(child(firebaseRef, '/'))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const data = snapshot.val()
+              for (let [key, value] of Object.entries(data)) {
+                if (key === 'Graph1_density') {
+                  for (let [subKey, subValue] of Object.entries(value)) {
+                    if (subKey === 'x_axis_density') {
+                      x_axis_density = subValue
+                    } else if (subKey === 'y_axis_density') {
+                      y_axis_density = subValue
 
-        for (i of bottomXvalues) {
-          i = Number(i);
-          bottom += i;
+                      new Chart('myChart', {
+                        type: 'line',
+                        data: {
+                          labels: x_axis_density,
+                          datasets: [
+                            {
+                              label: 'density pop/km2',
+                              borderColor: '#8e5ea2',
+                              fill: false,
+                              data: y_axis_density,
+                            },
+                          ],
+                        },
+                        options: {
+                          legend: { display: true },
+                          title: {
+                            display: true,
+                            text: 'Density of the world over time',
+                          },
+                        },
+                      })
+                    }
+                  }
+                } else if (key === 'Graph2_stn_dev') {
+                  for (let [subKey, subValue] of Object.entries(value)) {
+                    if (subKey === 'x_axis_stn_dev') {
+                      x_axis_stn_dev = subValue
+                    } else if (subKey === 'y_axis_stn_dev') {
+                      y_axis_stn_dev = subValue
+
+                      for (let i of y_axis_stn_dev) {
+                        //delete 6 zeroes from the end #####!!!!!!
+                      }
+
+                      // Create the chart for Graph2
+                      new Chart('myChart2', {
+                        //create a box of grey color at the background of the chart###!!!!!!!!!!!!
+                        type: 'bar',
+                        data: {
+                          labels: x_axis_stn_dev,
+                          datasets: [
+                            {
+                              label: 'Population',
+                              backgroundColor: [
+                                '#3e95cd',
+                                '#8e5ea2',
+                                '#3cba9f',
+                                '#e8c3b9',
+                                '#c45850',
+                              ],
+                              borderColor: 'rgba(255,0,0,0.1)',
+                              data: y_axis_stn_dev,
+                            },
+                          ],
+                        },
+                        options: {
+                          legend: { display: true }, //### display on the left!!!
+                          title: {
+                            display: true,
+                            text:
+                              'Variation in population size across the world over time',
+                          },
+                        },
+                      })
+                    }
+                  }
+                } else if (key == 'Country_list') {
+                  for (let i of value) {
+                    Country_list.push(i)
+                  }
+                  //console.log(Country_list)
+                } else if (key == 'Country_density') {
+                }
+              }
+            } else {
+              console.log('No data found in Firebase root.')
+            }
+            Test(Country_list)
+          })
+
+          .catch((error) => {
+            console.error('Error fetching data:', error)
+          })
+      }
+
+      //function call
+      addDataToChart()
+
+      function Test(x) {
+        let Country_list = x
+
+        //console.log(Country_list)
+
+        var select = document.getElementById('selectElementId')
+
+        for (let i of Country_list) {
+          //console.log(i)
+          var opt = document.createElement('option')
+          opt.value = i
+          opt.innerHTML = i
+          select.appendChild(opt)
         }
-        //console.log(top, bottom);
-        let m = Number(top / bottom);
-        //console.log(m);
-        let b = meany - m * meanx;
-        //console.log(b);
-        let equation = "y = " + m.toFixed(1) + "x + " + b.toFixed(1);
-        console.log(equation);
       }
     </script>
   </body>
