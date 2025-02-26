@@ -9,8 +9,7 @@
   <body>
     <div class="formbold-main-wrapper">
       <div class="formbold-form-wrapper">
-        <form>
-          <!--action="https://formbold.com/s/FORM_ID" method="POST"-->
+        <form id="form">
           <div class="formbold-input-group">
             <label for="name" class="formbold-form-label">Name</label>
             <input
@@ -25,7 +24,7 @@
           <div class="formbold-input-group">
             <label for="age" class="formbold-form-label">Age</label>
             <input
-              type="text"
+              type="int"
               name="age"
               id="age"
               placeholder="Enter your age"
@@ -46,7 +45,7 @@
               <option value="Student">Student</option>
               <option value="child">Pre-school</option>
 
-              <option value="adultk">Employed</option>
+              <option value="adult">Employed</option>
               <option value="retired">Retired</option>
             </select>
           </div>
@@ -102,6 +101,57 @@
         </form>
       </div>
     </div>
+    <script type="module">
+      const firebaseConfig = {
+        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
+        authDomain: 'project-cb978.firebaseapp.com',
+        databaseURL:
+          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
+        projectId: 'project-cb978',
+        storageBucket: 'project-cb978.firebasestorage.app',
+        messagingSenderId: '396597845049',
+        appId: '1:81524826446:web:596f420c323372555ebe1f',
+      }
+
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
+      const app = initializeApp(firebaseConfig)
+      import {
+        getDatabase,
+        ref,
+        set,
+        get,
+        update,
+        child,
+        query,
+        orderByChild,
+        push,
+      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
+      const database = getDatabase()
+      const firebaseRef = ref(database)
+      function Updatingdatabase() {
+        let newRecord = {}
+        let name = document.getElementById('name')
+
+        let age = document.getElementById('age')
+        let option = document.getElementById('occupation')
+        let eu = document.getElementById('ans')
+        let comment = document.getElementById('message')
+        newRecord['name'] = name.value
+        newRecord['age'] = age.value
+        newRecord['option'] = option.value
+        newRecord['eu'] = eu.value
+        newRecord['comment'] = comment.value
+
+        push(ref(database, '/User'), newRecord)
+      }
+      let formsubmission = document.getElementById('form')
+      formsubmission.addEventListener('submit', Updatingdatabase)
+
+      // function gettingUserSubmit() {
+      //   var input = document.getElementById('userInput')
+      //   alert(input)
+      // }
+    </script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
       * {
