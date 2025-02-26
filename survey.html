@@ -43,10 +43,9 @@
               id="occupation"
             >
               <option value="Student">Student</option>
-              <option value="child">Pre-school</option>
+              <option value="Pre-school">Pre-school</option>
 
-              <option value="adult">Employed</option>
-              <option value="retired">Retired</option>
+              <option value="Employed">Employed or retired</option>
             </select>
           </div>
 
@@ -62,7 +61,7 @@
                     class="formbold-input-radio"
                     type="radio"
                     name="ans"
-                    id="ans"
+                    value="true"
                   />
                   Yes
                   <span class="formbold-radio-checkmark"></span>
@@ -75,7 +74,7 @@
                     class="formbold-input-radio"
                     type="radio"
                     name="ans"
-                    id="ans"
+                    value="false"
                   />
                   No
                   <span class="formbold-radio-checkmark"></span>
@@ -101,20 +100,31 @@
         </form>
       </div>
     </div>
+    <h2>Results</h2>
+    <div id="results">
+      <p>Average Age: <span id="average-age"></span> years</p>
+      <p>Student: <span id="student-percentage"></span></p>
+      <p>Pre-school: <span id="preschool-percentage"></span></p>
+      <p>Employed or retired: <span id="employed-percentage"></span></p>
+
+      <p>EU: <span id="eu-percentage"></span></p>
+      <p>Non-EU: <span id="non-eu-percentage"></span></p>
+    </div>
+
     <script type="module">
       const firebaseConfig = {
-        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
-        authDomain: 'project-cb978.firebaseapp.com',
+        apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
+        authDomain: "project-cb978.firebaseapp.com",
         databaseURL:
-          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
-        projectId: 'project-cb978',
-        storageBucket: 'project-cb978.firebasestorage.app',
-        messagingSenderId: '396597845049',
-        appId: '1:81524826446:web:596f420c323372555ebe1f',
-      }
+          "https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "project-cb978",
+        storageBucket: "project-cb978.firebasestorage.app",
+        messagingSenderId: "396597845049",
+        appId: "1:81524826446:web:596f420c323372555ebe1f",
+      };
 
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
-      const app = initializeApp(firebaseConfig)
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      const app = initializeApp(firebaseConfig);
       import {
         getDatabase,
         ref,
@@ -125,42 +135,196 @@
         query,
         orderByChild,
         push,
-      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
-      const database = getDatabase()
-      const firebaseRef = ref(database)
+      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+      const database = getDatabase();
+      const firebaseRef = ref(database);
+
       function Updatingdatabase() {
-        let newRecord = {}
-        let name = document.getElementById('name')
+        let newRecord = {};
+        let name = document.getElementById("name");
+        let selectedRadio = document.querySelector('input[name="ans"]:checked');
 
-        let age = document.getElementById('age')
-        let option = document.getElementById('occupation')
-        let eu = document.getElementById('ans')
-        let comment = document.getElementById('message')
-        newRecord['name'] = name.value
-        newRecord['age'] = age.value
-        newRecord['option'] = option.value
-        newRecord['eu'] = eu.value
-        newRecord['comment'] = comment.value
+        if (selectedRadio) {
+          newRecord["eu"] = selectedRadio.value === "true";
+        } else {
+          newRecord["eu"] = null;
+        }
+        let age = document.getElementById("age");
+        let option = document.getElementById("occupation");
+        let comment = document.getElementById("message");
+        newRecord["name"] = name.value.trim() ? name.value : null;
+        newRecord["age"] = parseInt(age.value, 10) || null;
+        newRecord["option"] = option.value.trim() ? option.value : null;
+        newRecord["comment"] = comment.value.trim() ? comment.value : null;
 
-        push(ref(database, '/User'), newRecord)
+        push(ref(database, "/User"), newRecord);
       }
-      let formsubmission = document.getElementById('form')
-      formsubmission.addEventListener('submit', Updatingdatabase)
+      let formsubmission = document.getElementById("form");
+      formsubmission.addEventListener("submit", Updatingdatabase);
 
-      // function gettingUserSubmit() {
-      //   var input = document.getElementById('userInput')
-      //   alert(input)
-      // }
+      const nameArray = [];
+      const ageArray = [];
+      const commentArray = [];
+      const euArray = [];
+      const optionArray = [];
+
+      get(child(firebaseRef, "/"))
+        .then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+            for (let [key, value] of Object.entries(data)) {
+              if (key === "User") {
+                for (let userKey in value) {
+                  let userData = value[userKey];
+
+                  nameArray.push(userData.name || null);
+                  ageArray.push(userData.age || null);
+                  commentArray.push(userData.comment || null);
+                  euArray.push(userData.eu !== undefined ? userData.eu : null);
+                  optionArray.push(userData.option || null);
+                }
+              }
+            }
+            const averageAge = calculateAverageAge(ageArray);
+            const studentPercentage = calculateCategoryPercentage(
+              optionArray,
+              "Student"
+            );
+            const preschoolPercentage = calculateCategoryPercentage(
+              optionArray,
+              "Pre-school"
+            );
+            const employedPercentage = calculateCategoryPercentage(
+              optionArray,
+              "Employed"
+            );
+
+            const euPercentage = calculateEuPercentage(euArray);
+            const nonEuPercentage = calculateEuPercentage(euArray, false);
+
+            document.getElementById("average-age").textContent =
+              averageAge.toFixed(0);
+            document.getElementById("student-percentage").textContent =
+              studentPercentage.toFixed(0) + "%";
+            document.getElementById("preschool-percentage").textContent =
+              preschoolPercentage.toFixed(0) + "%";
+            document.getElementById("employed-percentage").textContent =
+              employedPercentage.toFixed(0) + "%";
+
+            document.getElementById("eu-percentage").textContent =
+              euPercentage.toFixed(0) + "%";
+            document.getElementById("non-eu-percentage").textContent =
+              nonEuPercentage.toFixed(0) + "%";
+          }
+        })
+        .catch((error) => {
+          console.error("Error", error);
+        });
+
+      function calculateAverageAge(ages) {
+        if (ages.length === 0) {
+          return 0;
+        }
+
+        let filteredAges = ages.filter(
+          (age) => age !== null && age !== undefined
+        );
+
+        if (filteredAges.length === 0) {
+          return 0;
+        }
+
+        let sum = filteredAges.reduce((acc, age) => acc + age, 0);
+        return sum / filteredAges.length;
+      }
+
+      function calculateCategoryPercentage(options, category) {
+        if (options.length === 0) {
+          return 0;
+        }
+
+        let filteredOptions = options.filter(
+          (option) => option !== null && option !== undefined
+        );
+        let count = filteredOptions.filter(
+          (option) => option === category
+        ).length;
+        return (count / filteredOptions.length) * 100;
+      }
+
+      function calculateEuPercentage(euArray, isEu = true) {
+        if (euArray.length === 0) {
+          return 0;
+        }
+
+        let filteredEu = euArray.filter(
+          (eu) => eu !== null && eu !== undefined
+        );
+        let count = filteredEu.filter((eu) => eu === isEu).length;
+        return (count / filteredEu.length) * 100;
+      }
     </script>
+
     <style>
-      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
       }
+      h2 {
+        font-size: 28px;
+        color: #6a64f1;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+      }
+
+      #results {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: 40px auto;
+        font-family: "Inter", sans-serif;
+      }
+
+      #results p {
+        font-size: 16px;
+        line-height: 24px;
+        color: #07074d;
+        margin: 10px 0;
+      }
+
+      #results p span {
+        font-weight: bold;
+        color: #6a64f1;
+      }
+
+      #results p:last-child {
+        margin-bottom: 0;
+      }
+
+      #results p span::before {
+        content: " ";
+        display: inline-block;
+      }
+
+      #results p span {
+        color: #4caf50;
+        font-size: 18px;
+      }
+
+      #results p:nth-child(even) span {
+        color: #f44336;
+      }
+
+      #results p:nth-child(odd) span {
+        color: #6a64f1;
+      }
       body {
-        font-family: 'Inter', sans-serif;
+        font-family: "Inter", sans-serif;
       }
       .formbold-main-wrapper {
         display: flex;
@@ -175,10 +339,6 @@
         width: 100%;
         background: white;
         padding: 40px;
-      }
-
-      .formbold-form-img {
-        margin-bottom: 45px;
       }
 
       .formbold-input-group {
@@ -238,7 +398,7 @@
         background-color: #6a64f1;
       }
       .formbold-radio-checkmark:after {
-        content: '';
+        content: "";
         position: absolute;
         display: none;
       }
