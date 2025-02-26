@@ -122,7 +122,8 @@ def ave_tot_pop_F(obj,i):#function for total and average population
     return ave_pop,sum_pop
 
 def formula_den_F(year_p,land):
-    return year_p/land
+    density = year_p/land
+    return density
 
 
 
@@ -139,7 +140,6 @@ def density_of_each_country_points(l_col_names,obj):
                 density_of_each_c_obj[i] += [density]
             else:
                 density_of_each_c_obj[i] = []
-                #density_of_each_c_obj[i].append(density)
                 density_of_each_c_obj[i] += [density]
         c += 1
         #print(x,density_of_each_c_obj['pop1980'])
@@ -170,10 +170,10 @@ def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_
             try:
                 indexPosition = density_of_each_c_obj["pop1980"].index(i)
                 if obj["country"][indexPosition] not in obj_firebase_density_countries:
-                    obj_firebase_density_countries[obj["country"][indexPosition]]=[]
+                    obj_firebase_density_countries[obj["country"][indexPosition]]=[]#{'density':[]}
                     for everyYear in l_col_names:
                         
-                        obj_firebase_density_countries[obj["country"][indexPosition]]+=[density_of_each_c_obj[everyYear][indexPosition] ]
+                        obj_firebase_density_countries[obj["country"][indexPosition]]+=[density_of_each_c_obj[everyYear][indexPosition] ]#['density'].append(density_of_each_c_obj[everyYear][indexPosition])
                 
             except:
                 #print('Unable to find value at position: ',i)
@@ -213,7 +213,7 @@ def country_pop_min_mean_F(obj,key,c):
     for i in obj[key]:
         l.append(i - ave_pop_in_list_F(l_col_names,obj)[c])
     return l
-"""
+
 def points_stn_dev_F(l_col_names,obj):
     #pop-mean
     pop_country_less_ave_d = {}
@@ -277,7 +277,8 @@ fb_dictionary={
         "x_axis_stn_dev":x_axis_stn_d,
         "y_axis_stn_dev":y_axis_stn_d_round
         },
-    "Country_list": countries_to_js
+    "Country_list": countries_to_js,
+    "Country_density":obj_firebase_density_countries
     }
 
 ref = db.reference('/')
@@ -303,4 +304,3 @@ plt.xlabel('Time')
 plt.ylabel('Population')
 plt.title('Variation in population size across the world over time')
 plt.show()
-"""
