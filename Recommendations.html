@@ -72,7 +72,7 @@
               name="pop"
               id="pop"
             >
-              <option value="all">Any</option><!-- aaaaaaaaaaaaaaaaa -->
+              <option value="all">Any</option>
               <option value="1">0 - 10 000 000</option>
               <option value="2">10 000 000 - 500 000 000</option>
               <option value="3">500 000 00 - 1 400 000 000 and more</option>
@@ -88,22 +88,65 @@
     </div>
 
     <script type="module">
-      function gettingrecommendations() {
-      let newRecord = {}
-        let density = document.getElementById('density')
-        let eu = document.getElementById('eu')
-        let rate = document.getElementById('rate')
-        let pop = document.getElementById('pop')
-        newRecord['density'] = density.value.trim() ? density.value : null
-        newRecord['eu'] = eu.value.trim() ? eu.value : null
-        newRecord['rate'] = rate.value.trim() ? rate.value : null
-        newRecord['pop'] = pop.value.trim() ? pop.value : null
-      return newRecord
-      }
-      let formsubmission = document.getElementById('form')
-      formsubmission.addEventListener('submit', gettingrecommendations)
-      // console.log(density,eu,rate,pop)
-      console.log(newRecord)
+       function gettingrecommendations(event) {
+    event.preventDefault(); 
+
+    let density = document.getElementById('density').value;
+    let eu = document.getElementById('eu').value;
+    let rate = document.getElementById('rate').value;
+    let pop = document.getElementById('pop').value;
+
+    console.log("Density:", density);
+    console.log("EU:", eu);
+    console.log("Growth Rate:", rate);
+    console.log("Population:", pop);
+
+  
+    return { density, eu, rate, pop };
+  }
+
+  let formsubmission = document.getElementById('form');
+  formsubmission.addEventListener('submit', gettingrecommendations);
     </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Inter", sans-serif;
+      }
+      .formbold-form-wrapper {
+        max-width: 500px;
+        margin: 20px auto;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        margin-top: 20px;
+      }
+      .formbold-form-input,
+      .formbold-form-select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 16px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+      }
+      .formbold-btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        background-color: #254373;
+        color: white;
+        font-size: 16px;
+      }
+      .formbold-btn:hover {
+        background-color: #18601c;
+      }
+    </style>
   </body>
 </html>

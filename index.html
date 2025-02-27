@@ -20,24 +20,24 @@
       <option value="all">All</option>
     </select>
 
-    <canvas id="myChart" style="width: 100%; max-width: 700px;"></canvas>
+    <canvas id="myChart" style="width: 100%; max-width: 700px"></canvas>
 
-    <canvas id="myChart2" style="width: 100%; max-width: 700px;"></canvas>
+    <canvas id="myChart2" style="width: 100%; max-width: 700px"></canvas>
 
     <script type="module">
       const firebaseConfig = {
-        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
-        authDomain: 'project-cb978.firebaseapp.com',
+        apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
+        authDomain: "project-cb978.firebaseapp.com",
         databaseURL:
-          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
-        projectId: 'project-cb978',
-        storageBucket: 'project-cb978.firebasestorage.app',
-        messagingSenderId: '396597845049',
-        appId: '1:81524826446:web:596f420c323372555ebe1f',
-      }
+          "https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "project-cb978",
+        storageBucket: "project-cb978.firebasestorage.app",
+        messagingSenderId: "396597845049",
+        appId: "1:81524826446:web:596f420c323372555ebe1f",
+      };
 
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
-      const app = initializeApp(firebaseConfig)
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      const app = initializeApp(firebaseConfig);
       import {
         getDatabase,
         ref,
@@ -47,36 +47,36 @@
         child,
         query,
         orderByChild,
-      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
-      const database = getDatabase()
-      const firebaseRef = ref(database)
+      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+      const database = getDatabase();
+      const firebaseRef = ref(database);
 
       function addDataToChart() {
-        let x_axis_density = []
-        let y_axis_density = []
-        let x_axis_stn_dev = []
-        let y_axis_stn_dev = []
-        let Country_list = []
-        get(child(firebaseRef, '/'))
+        let x_axis_density = [];
+        let y_axis_density = [];
+        let x_axis_stn_dev = [];
+        let y_axis_stn_dev = [];
+        let Country_list = [];
+        get(child(firebaseRef, "/"))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              const data = snapshot.val()
+              const data = snapshot.val();
               for (let [key, value] of Object.entries(data)) {
-                if (key === 'Graph1_density') {
+                if (key === "Graph1_density") {
                   for (let [subKey, subValue] of Object.entries(value)) {
-                    if (subKey === 'x_axis_density') {
-                      x_axis_density = subValue
-                    } else if (subKey === 'y_axis_density') {
-                      y_axis_density = subValue
+                    if (subKey === "x_axis_density") {
+                      x_axis_density = subValue;
+                    } else if (subKey === "y_axis_density") {
+                      y_axis_density = subValue;
 
-                      new Chart('myChart', {
-                        type: 'line',
+                      new Chart("myChart", {
+                        type: "line",
                         data: {
                           labels: x_axis_density,
                           datasets: [
                             {
-                              label: 'density pop/km2',
-                              borderColor: '#8e5ea2',
+                              label: "density pop/km2",
+                              borderColor: "#8e5ea2",
                               fill: false,
                               data: y_axis_density,
                             },
@@ -86,40 +86,40 @@
                           legend: { display: true },
                           title: {
                             display: true,
-                            text: 'Density of the world over time',
+                            text: "Density of the world over time",
                           },
                         },
-                      })
+                      });
                     }
                   }
-                } else if (key === 'Graph2_stn_dev') {
+                } else if (key === "Graph2_stn_dev") {
                   for (let [subKey, subValue] of Object.entries(value)) {
-                    if (subKey === 'x_axis_stn_dev') {
-                      x_axis_stn_dev = subValue
-                    } else if (subKey === 'y_axis_stn_dev') {
-                      y_axis_stn_dev = subValue
+                    if (subKey === "x_axis_stn_dev") {
+                      x_axis_stn_dev = subValue;
+                    } else if (subKey === "y_axis_stn_dev") {
+                      y_axis_stn_dev = subValue;
 
                       for (let i of y_axis_stn_dev) {
                         //delete 6 zeroes from the end #####!!!!!!
                       }
 
                       // Create the chart for Graph2
-                      new Chart('myChart2', {
+                      new Chart("myChart2", {
                         //create a box of grey color at the background of the chart###!!!!!!!!!!!!
-                        type: 'bar',
+                        type: "bar",
                         data: {
                           labels: x_axis_stn_dev,
                           datasets: [
                             {
-                              label: 'Population',
+                              label: "Population",
                               backgroundColor: [
-                                '#3e95cd',
-                                '#8e5ea2',
-                                '#3cba9f',
-                                '#e8c3b9',
-                                '#c45850',
+                                "#3e95cd",
+                                "#8e5ea2",
+                                "#3cba9f",
+                                "#e8c3b9",
+                                "#c45850",
                               ],
-                              borderColor: 'rgba(255,0,0,0.1)',
+                              borderColor: "rgba(255,0,0,0.1)",
                               data: y_axis_stn_dev,
                             },
                           ],
@@ -128,48 +128,47 @@
                           legend: { display: true }, //### display on the left!!!
                           title: {
                             display: true,
-                            text:
-                              'Variation in population size across the world over time',
+                            text: "Variation in population size across the world over time",
                           },
                         },
-                      })
+                      });
                     }
                   }
-                } else if (key == 'Country_list') {
+                } else if (key == "Country_list") {
                   for (let i of value) {
-                    Country_list.push(i)
+                    Country_list.push(i);
                   }
                   //console.log(Country_list)
-                } else if (key == 'Country_density') {
+                } else if (key == "Country_density") {
                 }
               }
             } else {
-              console.log('No data found in Firebase root.')
+              console.log("No data found in Firebase root.");
             }
-            Test(Country_list)
+            Test(Country_list);
           })
 
           .catch((error) => {
-            console.error('Error fetching data:', error)
-          })
+            console.error("Error fetching data:", error);
+          });
       }
 
       //function call
-      addDataToChart()
+      addDataToChart();
 
       function Test(x) {
-        let Country_list = x
+        let Country_list = x;
 
         //console.log(Country_list)
 
-        var select = document.getElementById('selectElementId')
+        var select = document.getElementById("selectElementId");
 
         for (let i of Country_list) {
           //console.log(i)
-          var opt = document.createElement('option')
-          opt.value = i
-          opt.innerHTML = i
-          select.appendChild(opt)
+          var opt = document.createElement("option");
+          opt.value = i;
+          opt.innerHTML = i;
+          select.appendChild(opt);
         }
       }
     </script>

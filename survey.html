@@ -132,18 +132,18 @@
 
     <script type="module">
       const firebaseConfig = {
-        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
-        authDomain: 'project-cb978.firebaseapp.com',
+        apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
+        authDomain: "project-cb978.firebaseapp.com",
         databaseURL:
-          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
-        projectId: 'project-cb978',
-        storageBucket: 'project-cb978.firebasestorage.app',
-        messagingSenderId: '396597845049',
-        appId: '1:81524826446:web:596f420c323372555ebe1f',
-      }
+          "https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "project-cb978",
+        storageBucket: "project-cb978.firebasestorage.app",
+        messagingSenderId: "396597845049",
+        appId: "1:81524826446:web:596f420c323372555ebe1f",
+      };
 
-      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
-      const app = initializeApp(firebaseConfig)
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      const app = initializeApp(firebaseConfig);
       import {
         getDatabase,
         ref,
@@ -154,131 +154,133 @@
         query,
         orderByChild,
         push,
-      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
-      const database = getDatabase()
-      const firebaseRef = ref(database)
+      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+      const database = getDatabase();
+      const firebaseRef = ref(database);
 
       function Updatingdatabase() {
-        let newRecord = {}
-        let name = document.getElementById('name')
-        let selectedRadio = document.querySelector('input[name="ans"]:checked')
+        let newRecord = {};
+        let name = document.getElementById("name");
+        let selectedRadio = document.querySelector('input[name="ans"]:checked');
 
         if (selectedRadio) {
-          newRecord['eu'] = selectedRadio.value === 'true'
+          newRecord["eu"] = selectedRadio.value === "true";
         } else {
-          newRecord['eu'] = null
+          newRecord["eu"] = null;
         }
-        let age = document.getElementById('age')
-        let option = document.getElementById('occupation')
-        let comment = document.getElementById('message')
-        newRecord['name'] = name.value.trim() ? name.value : null
-        newRecord['age'] = parseInt(age.value, 10) || null
-        newRecord['option'] = option.value.trim() ? option.value : null
-        newRecord['comment'] = comment.value.trim() ? comment.value : null
+        let age = document.getElementById("age");
+        let option = document.getElementById("occupation");
+        let comment = document.getElementById("message");
+        newRecord["name"] = name.value.trim() ? name.value : null;
+        newRecord["age"] = parseInt(age.value, 10) || null;
+        newRecord["option"] = option.value.trim() ? option.value : null;
+        newRecord["comment"] = comment.value.trim() ? comment.value : null;
 
-        push(ref(database, '/User'), newRecord)
+        push(ref(database, "/User"), newRecord);
       }
-      let formsubmission = document.getElementById('form')
-      formsubmission.addEventListener('submit', Updatingdatabase)
+      let formsubmission = document.getElementById("form");
+      formsubmission.addEventListener("submit", Updatingdatabase);
 
-      const nameArray = []
-      const ageArray = []
-      const commentArray = []
-      const euArray = []
-      const optionArray = []
+      const nameArray = [];
+      const ageArray = [];
+      const commentArray = [];
+      const euArray = [];
+      const optionArray = [];
 
-      get(child(firebaseRef, '/'))
+      get(child(firebaseRef, "/"))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            const data = snapshot.val()
+            const data = snapshot.val();
             for (let [key, value] of Object.entries(data)) {
-              if (key === 'User') {
+              if (key === "User") {
                 for (let userKey in value) {
-                  let userData = value[userKey]
+                  let userData = value[userKey];
 
-                  nameArray.push(userData.name || null)
-                  ageArray.push(userData.age || null)
-                  commentArray.push(userData.comment || null)
-                  euArray.push(userData.eu !== undefined ? userData.eu : null)
-                  optionArray.push(userData.option || null)
+                  nameArray.push(userData.name || null);
+                  ageArray.push(userData.age || null);
+                  commentArray.push(userData.comment || null);
+                  euArray.push(userData.eu !== undefined ? userData.eu : null);
+                  optionArray.push(userData.option || null);
                 }
               }
             }
-            const averageAge = calculateAverageAge(ageArray)
+            const averageAge = calculateAverageAge(ageArray);
             const studentPercentage = calculateCategoryPercentage(
               optionArray,
-              'Student',
-            )
+              "Student"
+            );
             const preschoolPercentage = calculateCategoryPercentage(
               optionArray,
-              'Pre-school',
-            )
+              "Pre-school"
+            );
             const employedPercentage = calculateCategoryPercentage(
               optionArray,
-              'Employed',
-            )
+              "Employed"
+            );
 
-            const euPercentage = calculateEuPercentage(euArray)
-            const nonEuPercentage = calculateEuPercentage(euArray, false)
+            const euPercentage = calculateEuPercentage(euArray);
+            const nonEuPercentage = calculateEuPercentage(euArray, false);
 
-            document.getElementById(
-              'average-age',
-            ).textContent = averageAge.toFixed(0)
-            document.getElementById('student-percentage').textContent =
-              studentPercentage.toFixed(0) + '%'
-            document.getElementById('preschool-percentage').textContent =
-              preschoolPercentage.toFixed(0) + '%'
-            document.getElementById('employed-percentage').textContent =
-              employedPercentage.toFixed(0) + '%'
+            document.getElementById("average-age").textContent =
+              averageAge.toFixed(0);
+            document.getElementById("student-percentage").textContent =
+              studentPercentage.toFixed(0) + "%";
+            document.getElementById("preschool-percentage").textContent =
+              preschoolPercentage.toFixed(0) + "%";
+            document.getElementById("employed-percentage").textContent =
+              employedPercentage.toFixed(0) + "%";
 
-            document.getElementById('eu-percentage').textContent =
-              euPercentage.toFixed(0) + '%'
-            document.getElementById('non-eu-percentage').textContent =
-              nonEuPercentage.toFixed(0) + '%'
+            document.getElementById("eu-percentage").textContent =
+              euPercentage.toFixed(0) + "%";
+            document.getElementById("non-eu-percentage").textContent =
+              nonEuPercentage.toFixed(0) + "%";
           }
         })
         .catch((error) => {
-          console.error('Error', error)
-        })
+          console.error("Error", error);
+        });
 
       function calculateAverageAge(ages) {
         if (ages.length === 0) {
-          return 0
+          return 0;
         }
 
         let filteredAges = ages.filter(
-          (age) => age !== null && age !== undefined,
-        )
+          (age) => age !== null && age !== undefined
+        );
 
         if (filteredAges.length === 0) {
-          return 0
+          return 0;
         }
 
-        let sum = filteredAges.reduce((acc, age) => acc + age, 0) //acc
-        return sum / filteredAges.length
+        let sum = filteredAges.reduce((acc, age) => acc + age, 0); //acc
+        return sum / filteredAges.length;
       }
 
       function calculateCategoryPercentage(options, category) {
         if (options.length === 0) {
-          return 0
+          return 0;
         }
 
         let filteredOptions = options.filter(
-          (option) => option !== null && option !== undefined,
-        )
-        let count = filteredOptions.filter((option) => option === category)
-          .length
-        return (count / filteredOptions.length) * 100
+          (option) => option !== null && option !== undefined
+        );
+        let count = filteredOptions.filter(
+          (option) => option === category
+        ).length;
+        return (count / filteredOptions.length) * 100;
       }
 
       function calculateEuPercentage(euArray, isEu = true) {
         if (euArray.length === 0) {
-          return 0
+          return 0;
         }
 
-        let filteredEu = euArray.filter((eu) => eu !== null && eu !== undefined)
-        let count = filteredEu.filter((eu) => eu === isEu).length
-        return (count / filteredEu.length) * 100
+        let filteredEu = euArray.filter(
+          (eu) => eu !== null && eu !== undefined
+        );
+        let count = filteredEu.filter((eu) => eu === isEu).length;
+        return (count / filteredEu.length) * 100;
       }
     </script>
 
@@ -287,197 +289,78 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
+        font-family: "Inter", sans-serif;
       }
+
       h2 {
-        font-size: 28px;
-        color: #6a64f1;
-        font-weight: 700;
-        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
         text-align: center;
+        margin-bottom: 15px;
       }
 
       #results {
-        margin-top: 40px;
-        padding: 20px;
-        background-color: #f9f9f9;
+        max-width: 500px;
+        margin: 20px auto;
+        padding: 15px;
+        background: white;
         border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        max-width: 600px;
-        margin: 40px auto;
-        font-family: 'Inter', sans-serif;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        margin-top: 20px;
       }
 
       #results p {
         font-size: 16px;
-        line-height: 24px;
-        color: #07074d;
-        margin: 10px 0;
+        color: #444;
+        margin: 15px 0;
       }
 
       #results p span {
         font-weight: bold;
-        color: #6a64f1;
-      }
-
-      #results p:last-child {
-        margin-bottom: 0;
-      }
-
-      #results p span::before {
-        content: ' ';
-        display: inline-block;
-      }
-
-      #results p span {
-        color: #4caf50;
-        font-size: 18px;
-      }
-
-      #results p:nth-child(even) span {
-        color: #f44336;
-      }
-
-      #results p:nth-child(odd) span {
-        color: #6a64f1;
-      }
-      body {
-        font-family: 'Inter', sans-serif;
-      }
-      .formbold-main-wrapper {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 48px;
+        color: #254373;
       }
 
       .formbold-form-wrapper {
-        margin: 0 auto;
-        max-width: 570px;
-        width: 100%;
+        max-width: 500px;
+        margin: 20px auto;
         background: white;
-        padding: 40px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+        margin-top: 20px;
       }
 
-      .formbold-input-group {
-        margin-bottom: 18px;
-      }
-
+      .formbold-form-input,
       .formbold-form-select {
         width: 100%;
-        padding: 12px 22px;
+        padding: 10px;
+        border: 1px solid #ccc;
         border-radius: 5px;
-        border: 1px solid #dde3ec;
-        background: #ffffff;
         font-size: 16px;
-        color: #536387;
-        outline: none;
-        resize: none;
-      }
-
-      .formbold-input-radio-wrapper {
-        margin-bottom: 25px;
+        margin-top: 20px;
+        margin-bottom: 20px;
       }
       .formbold-radio-flex {
         display: flex;
-        flex-direction: column;
-        gap: 15px;
+        flex-direction: row;
+        gap: 20px;
+        margin-bottom: 20px;
+        margin-top: 20px;
       }
-      .formbold-radio-label {
-        font-size: 14px;
-        line-height: 24px;
-        color: #07074d;
-        position: relative;
-        padding-left: 25px;
-        cursor: pointer;
-        -webkit-user-select: none;
-        -moz-user-select: none;
-        -ms-user-select: none;
-        user-select: none;
-      }
-      .formbold-input-radio {
-        position: absolute;
-        opacity: 0;
-        cursor: pointer;
-      }
-      .formbold-radio-checkmark {
-        position: absolute;
-        top: -1px;
-        left: 0;
-        height: 18px;
-        width: 18px;
-        background-color: #ffffff;
-        border: 1px solid #dde3ec;
-        border-radius: 50%;
-      }
-      .formbold-radio-label
-        .formbold-input-radio:checked
-        ~ .formbold-radio-checkmark {
-        background-color: #6a64f1;
-      }
-      .formbold-radio-checkmark:after {
-        content: '';
-        position: absolute;
-        display: none;
-      }
-
-      .formbold-radio-label
-        .formbold-input-radio:checked
-        ~ .formbold-radio-checkmark:after {
-        display: block;
-      }
-
-      .formbold-radio-label .formbold-radio-checkmark:after {
-        top: 50%;
-        left: 50%;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: #ffffff;
-        transform: translate(-50%, -50%);
-      }
-
-      .formbold-form-input {
-        width: 100%;
-        padding: 13px 22px;
-        border-radius: 5px;
-        border: 1px solid #dde3ec;
-        background: #ffffff;
-        font-weight: 500;
-        font-size: 16px;
-        color: #07074d;
-        outline: none;
-        resize: none;
-      }
-      .formbold-form-input::placeholder {
-        color: #536387;
-      }
-      .formbold-form-input:focus {
-        border-color: #6a64f1;
-        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
-      }
-      .formbold-form-label {
-        color: #07074d;
-        font-size: 14px;
-        line-height: 24px;
-        display: block;
-        margin-bottom: 10px;
-      }
-
       .formbold-btn {
-        text-align: center;
         width: 100%;
-        font-size: 16px;
-        border-radius: 5px;
-        padding: 14px 25px;
+        padding: 12px;
         border: none;
-        font-weight: 500;
-        background-color: #6a64f1;
+        border-radius: 5px;
+        background-color: #254373;
         color: white;
-        cursor: pointer;
-        margin-top: 25px;
+        font-size: 16px;
       }
+
       .formbold-btn:hover {
-        box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
+        background-color: #18601c;
       }
     </style>
   </body>
