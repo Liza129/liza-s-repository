@@ -102,29 +102,48 @@
     </div>
     <h2>Results</h2>
     <div id="results">
-      <p>Average Age: <span id="average-age"></span> years</p>
-      <p>Student: <span id="student-percentage"></span></p>
-      <p>Pre-school: <span id="preschool-percentage"></span></p>
-      <p>Employed or retired: <span id="employed-percentage"></span></p>
+      <p>
+        Average Age:
+        <span id="average-age"></span>
+        years
+      </p>
+      <p>
+        Student:
+        <span id="student-percentage"></span>
+      </p>
+      <p>
+        Pre-school:
+        <span id="preschool-percentage"></span>
+      </p>
+      <p>
+        Employed or retired:
+        <span id="employed-percentage"></span>
+      </p>
 
-      <p>EU: <span id="eu-percentage"></span></p>
-      <p>Non-EU: <span id="non-eu-percentage"></span></p>
+      <p>
+        EU:
+        <span id="eu-percentage"></span>
+      </p>
+      <p>
+        Non-EU:
+        <span id="non-eu-percentage"></span>
+      </p>
     </div>
 
     <script type="module">
       const firebaseConfig = {
-        apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
-        authDomain: "project-cb978.firebaseapp.com",
+        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
+        authDomain: 'project-cb978.firebaseapp.com',
         databaseURL:
-          "https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "project-cb978",
-        storageBucket: "project-cb978.firebasestorage.app",
-        messagingSenderId: "396597845049",
-        appId: "1:81524826446:web:596f420c323372555ebe1f",
-      };
+          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
+        projectId: 'project-cb978',
+        storageBucket: 'project-cb978.firebasestorage.app',
+        messagingSenderId: '396597845049',
+        appId: '1:81524826446:web:596f420c323372555ebe1f',
+      }
 
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-      const app = initializeApp(firebaseConfig);
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
+      const app = initializeApp(firebaseConfig)
       import {
         getDatabase,
         ref,
@@ -135,133 +154,131 @@
         query,
         orderByChild,
         push,
-      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
-      const database = getDatabase();
-      const firebaseRef = ref(database);
+      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
+      const database = getDatabase()
+      const firebaseRef = ref(database)
 
       function Updatingdatabase() {
-        let newRecord = {};
-        let name = document.getElementById("name");
-        let selectedRadio = document.querySelector('input[name="ans"]:checked');
+        let newRecord = {}
+        let name = document.getElementById('name')
+        let selectedRadio = document.querySelector('input[name="ans"]:checked')
 
         if (selectedRadio) {
-          newRecord["eu"] = selectedRadio.value === "true";
+          newRecord['eu'] = selectedRadio.value === 'true'
         } else {
-          newRecord["eu"] = null;
+          newRecord['eu'] = null
         }
-        let age = document.getElementById("age");
-        let option = document.getElementById("occupation");
-        let comment = document.getElementById("message");
-        newRecord["name"] = name.value.trim() ? name.value : null;
-        newRecord["age"] = parseInt(age.value, 10) || null;
-        newRecord["option"] = option.value.trim() ? option.value : null;
-        newRecord["comment"] = comment.value.trim() ? comment.value : null;
+        let age = document.getElementById('age')
+        let option = document.getElementById('occupation')
+        let comment = document.getElementById('message')
+        newRecord['name'] = name.value.trim() ? name.value : null
+        newRecord['age'] = parseInt(age.value, 10) || null
+        newRecord['option'] = option.value.trim() ? option.value : null
+        newRecord['comment'] = comment.value.trim() ? comment.value : null
 
-        push(ref(database, "/User"), newRecord);
+        push(ref(database, '/User'), newRecord)
       }
-      let formsubmission = document.getElementById("form");
-      formsubmission.addEventListener("submit", Updatingdatabase);
+      let formsubmission = document.getElementById('form')
+      formsubmission.addEventListener('submit', Updatingdatabase)
 
-      const nameArray = [];
-      const ageArray = [];
-      const commentArray = [];
-      const euArray = [];
-      const optionArray = [];
+      const nameArray = []
+      const ageArray = []
+      const commentArray = []
+      const euArray = []
+      const optionArray = []
 
-      get(child(firebaseRef, "/"))
+      get(child(firebaseRef, '/'))
         .then((snapshot) => {
           if (snapshot.exists()) {
-            const data = snapshot.val();
+            const data = snapshot.val()
             for (let [key, value] of Object.entries(data)) {
-              if (key === "User") {
+              if (key === 'User') {
                 for (let userKey in value) {
-                  let userData = value[userKey];
+                  let userData = value[userKey]
 
-                  nameArray.push(userData.name || null);
-                  ageArray.push(userData.age || null);
-                  commentArray.push(userData.comment || null);
-                  euArray.push(userData.eu !== undefined ? userData.eu : null);
-                  optionArray.push(userData.option || null);
+                  nameArray.push(userData.name || null)
+                  ageArray.push(userData.age || null)
+                  commentArray.push(userData.comment || null)
+                  euArray.push(userData.eu !== undefined ? userData.eu : null)
+                  optionArray.push(userData.option || null)
                 }
               }
             }
-            const averageAge = calculateAverageAge(ageArray);
+            const averageAge = calculateAverageAge(ageArray)
             const studentPercentage = calculateCategoryPercentage(
               optionArray,
-              "Student"
-            );
+              'Student',
+            )
             const preschoolPercentage = calculateCategoryPercentage(
               optionArray,
-              "Pre-school"
-            );
+              'Pre-school',
+            )
             const employedPercentage = calculateCategoryPercentage(
               optionArray,
-              "Employed"
-            );
+              'Employed',
+            )
 
-            const euPercentage = calculateEuPercentage(euArray);
-            const nonEuPercentage = calculateEuPercentage(euArray, false);
+            const euPercentage = calculateEuPercentage(euArray)
+            const nonEuPercentage = calculateEuPercentage(euArray, false)
 
-            document.getElementById("average-age").textContent =
-              averageAge.toFixed(0);
-            document.getElementById("student-percentage").textContent =
-              studentPercentage.toFixed(0) + "%";
-            document.getElementById("preschool-percentage").textContent =
-              preschoolPercentage.toFixed(0) + "%";
-            document.getElementById("employed-percentage").textContent =
-              employedPercentage.toFixed(0) + "%";
+            document.getElementById(
+              'average-age',
+            ).textContent = averageAge.toFixed(0)
+            document.getElementById('student-percentage').textContent =
+              studentPercentage.toFixed(0) + '%'
+            document.getElementById('preschool-percentage').textContent =
+              preschoolPercentage.toFixed(0) + '%'
+            document.getElementById('employed-percentage').textContent =
+              employedPercentage.toFixed(0) + '%'
 
-            document.getElementById("eu-percentage").textContent =
-              euPercentage.toFixed(0) + "%";
-            document.getElementById("non-eu-percentage").textContent =
-              nonEuPercentage.toFixed(0) + "%";
+            document.getElementById('eu-percentage').textContent =
+              euPercentage.toFixed(0) + '%'
+            document.getElementById('non-eu-percentage').textContent =
+              nonEuPercentage.toFixed(0) + '%'
           }
         })
         .catch((error) => {
-          console.error("Error", error);
-        });
+          console.error('Error', error)
+        })
 
       function calculateAverageAge(ages) {
         if (ages.length === 0) {
-          return 0;
+          return 0
         }
 
         let filteredAges = ages.filter(
-          (age) => age !== null && age !== undefined
-        );
+          (age) => age !== null && age !== undefined,
+        )
 
         if (filteredAges.length === 0) {
-          return 0;
+          return 0
         }
 
-        let sum = filteredAges.reduce((acc, age) => acc + age, 0);
-        return sum / filteredAges.length;
+        let sum = filteredAges.reduce((acc, age) => acc + age, 0) //acc
+        return sum / filteredAges.length
       }
 
       function calculateCategoryPercentage(options, category) {
         if (options.length === 0) {
-          return 0;
+          return 0
         }
 
         let filteredOptions = options.filter(
-          (option) => option !== null && option !== undefined
-        );
-        let count = filteredOptions.filter(
-          (option) => option === category
-        ).length;
-        return (count / filteredOptions.length) * 100;
+          (option) => option !== null && option !== undefined,
+        )
+        let count = filteredOptions.filter((option) => option === category)
+          .length
+        return (count / filteredOptions.length) * 100
       }
 
       function calculateEuPercentage(euArray, isEu = true) {
         if (euArray.length === 0) {
-          return 0;
+          return 0
         }
 
-        let filteredEu = euArray.filter(
-          (eu) => eu !== null && eu !== undefined
-        );
-        let count = filteredEu.filter((eu) => eu === isEu).length;
-        return (count / filteredEu.length) * 100;
+        let filteredEu = euArray.filter((eu) => eu !== null && eu !== undefined)
+        let count = filteredEu.filter((eu) => eu === isEu).length
+        return (count / filteredEu.length) * 100
       }
     </script>
 
@@ -287,7 +304,7 @@
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         max-width: 600px;
         margin: 40px auto;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
       }
 
       #results p {
@@ -307,7 +324,7 @@
       }
 
       #results p span::before {
-        content: " ";
+        content: ' ';
         display: inline-block;
       }
 
@@ -324,7 +341,7 @@
         color: #6a64f1;
       }
       body {
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
       }
       .formbold-main-wrapper {
         display: flex;
@@ -398,7 +415,7 @@
         background-color: #6a64f1;
       }
       .formbold-radio-checkmark:after {
-        content: "";
+        content: '';
         position: absolute;
         display: none;
       }
