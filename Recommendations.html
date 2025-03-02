@@ -14,17 +14,17 @@
 
            <div class="formbold-input-group">
             <label class="formbold-form-label">
-             What is your desired range of density per square km?
+             What is your desired range of density_alp per square km?
             </label>
 
             <select
               class="formbold-form-select"
-              name="density"
-              id="density"
+              name="density_alp"
+              id="density_alp"
             >
               <option value="all">Any</option>
-              <option value="1">0 - 10 000</option>
-              <option value="2">10 000 - 19 000 and more</option>
+              <option value="1">0 - 300</option>
+              <option value="2">300 and more</option>
             </select>
           </div>
 
@@ -88,25 +88,155 @@
     </div>
 
     <script type="module">
+
+
+const firebaseConfig = {
+        apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
+        authDomain: "project-cb978.firebaseapp.com",
+        databaseURL:
+          "https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app",
+        projectId: "project-cb978",
+        storageBucket: "project-cb978.firebasestorage.app",
+        messagingSenderId: "396597845049",
+        appId: "1:81524826446:web:596f420c323372555ebe1f",
+      };
+
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
+      const app = initializeApp(firebaseConfig);
+      import {
+        getDatabase,
+        ref,
+        set,
+        get,
+        update,
+        child,
+        query,
+        orderByChild,
+      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
+      const database = getDatabase();
+      const firebaseRef = ref(database);
+
+
+
+
        function gettingrecommendations(event) {
-    event.preventDefault(); 
+          event.preventDefault(); 
 
-    let density = document.getElementById('density').value;
-    let eu = document.getElementById('eu').value;
-    let rate = document.getElementById('rate').value;
-    let pop = document.getElementById('pop').value;
+          let density_alp = document.getElementById('density_alp').value;
+          let eu = document.getElementById('eu').value;
+          let rate = document.getElementById('rate').value;
+          let pop = document.getElementById('pop').value;
 
-    console.log("Density:", density);
-    console.log("EU:", eu);
-    console.log("Growth Rate:", rate);
-    console.log("Population:", pop);
+          console.log("density_alp:", density_alp);
+          console.log("EU:", eu);
+          console.log("Growth Rate:", rate);
+          console.log("Population:", pop);
 
   
-    return { density, eu, rate, pop };
+    return { density_alp, eu, rate, pop };
   }
 
   let formsubmission = document.getElementById('form');
   formsubmission.addEventListener('submit', gettingrecommendations);
+
+
+  let list_score = []
+  let list_score_values = []
+  let country_list_non_alp = []
+  let density_alp = {}
+  let density_alp_less_10k = {}
+  let density_alp_more_10k = {}
+  let eu_c = []
+  let non_eu_c = []
+ let growth_rate_not_alp = {}
+let growth_rate_not_alp_neg = {}
+let growth_rate_not_alp_pos = {}
+ let pop_not_alp = {}
+ let pop_not_alp_10 = {}
+  let pop_not_alp_50 = {}
+    let pop_not_alp_140 = {}
+
+
+  get(child(firebaseRef, "/Country_list")).then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                country_list_non_alp = Object.values(data);
+                //console.log("country_list_non_alp", country_list_non_alp);
+              }
+
+
+ get(child(firebaseRef, "/Density_of_each_country")).then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                
+                for (let [key, value] of Object.entries(data)) {
+                  let c = 1
+                  //console.log("key",key,"value",value)
+                  for (let i of value){
+                    if(c === 4){
+                      density_alp[key] = i
+                          if (i<300){density_alp_less_10k[key]=i}else{density_alp_more_10k[key]=i}
+
+                    }
+                      c ++
+                }
+              }
+                console.log("density_alp_less_10k",density_alp_less_10k)
+                                console.log("density_alp_more_10k",density_alp_more_10k)
+
+               //console.log("density_alp", density_alp);
+              }
+
+
+ get(child(firebaseRef, "/EU_c")).then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                eu_c = Object.values(data);
+                //console.log("eu_c", eu_c);
+              }
+
+
+  get(child(firebaseRef, "/NonEU_c")).then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                non_eu_c = Object.values(data);
+                //console.log("non_eu_c", non_eu_c);
+              }
+
+
+ get(child(firebaseRef, "/growthRate")).then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                let growth_rate_not_alp_temp = Object.values(data);
+                // console.log("growth_rate_not_alp_temp",growth_rate_not_alp_temp)
+                // console.log("country_list_non_alp",country_list_non_alp)
+                country_list_non_alp.forEach((country, index) => {
+            
+           
+                growth_rate_not_alp[country] = growth_rate_not_alp_temp[index];
+
+                if (growth_rate_not_alp_temp[index] > 0) {
+                    growth_rate_not_alp_pos[country] = growth_rate_not_alp_temp[index];
+                } else {
+                    growth_rate_not_alp_neg[country] = growth_rate_not_alp_temp[index];
+                }
+            
+          })
+              }
+// console.log("growth_rate_not_alp",growth_rate_not_alp)
+// console.log("growth_rate_not_alp",growth_rate_not_alp_pos)
+// console.log("growth_rate_not_alp",growth_rate_not_alp_neg)
+
+
+ get(child(firebaseRef, "/pop2024")).then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                pop_not_alp = Object.values(data);
+                //console.log("pop_not_alp", pop_not_alp);
+              }
+})//get
+})})})})})
     </script>
     <style>
       * {

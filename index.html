@@ -14,15 +14,46 @@
     </nav>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-
+    <!--Chart1-->
     <label for="countries">Choose a country to show its density:</label>
-    <select name="countries" id="selectElementId" multiple>
-      <option value="all">All</option>
+    <select id="selectElementId">
+      <option value="all">All Countries</option>
     </select>
 
     <canvas id="myChart" style="width: 100%; max-width: 700px"></canvas>
 
+    <!--Chart2-->
+    <label for="stndev"
+      >Tick checkboxs to show variation in population sizes between the
+      folowing:</label
+    >
+    <div>
+      <!-- <label
+        ><input
+          type="checkbox"
+          class="filter-checkbox color-checkbox"
+          value="all"
+        />All</label
+      > -->
+      <label
+        ><input
+          type="checkbox"
+          class="filter-checkbox color-checkbox"
+          value="eu"
+        />EU</label
+      >
+      <label
+        ><input
+          type="checkbox"
+          class="filter-checkbox color-checkbox"
+          value="noneu"
+        />Non EU</label
+      >
+    </div>
     <canvas id="myChart2" style="width: 100%; max-width: 700px"></canvas>
+    <!--Chart3-->
+
+    <canvas id="myChart3" style="width: 100%; max-width: 700px"></canvas>
 
     <script type="module">
       const firebaseConfig = {
@@ -48,19 +79,26 @@
         query,
         orderByChild,
       } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+
       const database = getDatabase();
       const firebaseRef = ref(database);
+
+      //CHART 1 LINE
+      let selectedCountry = "all";
+      let myChart = null;
 
       function addDataToChart() {
         let x_axis_density = [];
         let y_axis_density = [];
-        let x_axis_stn_dev = [];
-        let y_axis_stn_dev = [];
+        // let x_axis_stn_dev = [];
+        // let y_axis_stn_dev = [];
         let Country_list = [];
+
         get(child(firebaseRef, "/"))
           .then((snapshot) => {
             if (snapshot.exists()) {
               const data = snapshot.val();
+
               for (let [key, value] of Object.entries(data)) {
                 if (key === "Graph1_density") {
                   for (let [subKey, subValue] of Object.entries(value)) {
@@ -68,109 +106,226 @@
                       x_axis_density = subValue;
                     } else if (subKey === "y_axis_density") {
                       y_axis_density = subValue;
-
-                      new Chart("myChart", {
-                        type: "line",
-                        data: {
-                          labels: x_axis_density,
-                          datasets: [
-                            {
-                              label: "density pop/km2",
-                              borderColor: "#8e5ea2",
-                              fill: false,
-                              data: y_axis_density,
-                            },
-                          ],
-                        },
-                        options: {
-                          legend: { display: true },
-                          title: {
-                            display: true,
-                            text: "Density of the world over time",
-                          },
-                        },
-                      });
                     }
                   }
-                } else if (key === "Graph2_stn_dev") {
-                  for (let [subKey, subValue] of Object.entries(value)) {
-                    if (subKey === "x_axis_stn_dev") {
-                      x_axis_stn_dev = subValue;
-                    } else if (subKey === "y_axis_stn_dev") {
-                      y_axis_stn_dev = subValue;
-
-                      for (let i of y_axis_stn_dev) {
-                        //delete 6 zeroes from the end #####!!!!!!
-                      }
-
-                      // Create the chart for Graph2
-                      new Chart("myChart2", {
-                        //create a box of grey color at the background of the chart###!!!!!!!!!!!!
-                        type: "bar",
-                        data: {
-                          labels: x_axis_stn_dev,
-                          datasets: [
-                            {
-                              label: "Population",
-                              backgroundColor: [
-                                "#3e95cd",
-                                "#8e5ea2",
-                                "#3cba9f",
-                                "#e8c3b9",
-                                "#c45850",
-                              ],
-                              borderColor: "rgba(255,0,0,0.1)",
-                              data: y_axis_stn_dev,
-                            },
-                          ],
-                        },
-                        options: {
-                          legend: { display: true }, //### display on the left!!!
-                          title: {
-                            display: true,
-                            text: "Variation in population size across the world over time",
-                          },
-                        },
-                      });
-                    }
-                  }
-                } else if (key == "Country_list") {
-                  for (let i of value) {
-                    Country_list.push(i);
-                  }
-                  //console.log(Country_list)
-                } else if (key == "Country_density") {
+                } else if (key === "Country_list") {
+                  Country_list = value; //list of all countries for filter
                 }
               }
+
+              Test(Country_list, x_axis_density); // filter
+              updateChart(x_axis_density, y_axis_density); // chart
             } else {
               console.log("No data found in Firebase root.");
             }
-            Test(Country_list);
           })
-
           .catch((error) => {
             console.error("Error fetching data:", error);
           });
       }
 
-      //function call
       addDataToChart();
 
-      function Test(x) {
-        let Country_list = x;
+      function Test(Country_list, x_axis_density) {
+        let select = document.getElementById("selectElementId");
 
-        //console.log(Country_list)
-
-        var select = document.getElementById("selectElementId");
-
-        for (let i of Country_list) {
-          //console.log(i)
-          var opt = document.createElement("option");
-          opt.value = i;
-          opt.innerHTML = i;
+        for (let country of Country_list) {
+          //create all the options, set all to default
+          let opt = document.createElement("option");
+          opt.value = country;
+          opt.innerHTML = country;
           select.appendChild(opt);
         }
+
+        select.addEventListener("change", function () {
+          selectedCountry = this.value; //this.value is the option selected in dropdown menu => "Ireland"//this is the option on the <select>
+          //console.log("country:", selectedCountry);
+          update_chart_country_or_all_F(x_axis_density);
+        });
       }
+
+      function updateChart(x_axis_density, y_axis_density) {
+        if (myChart) {
+          myChart.destroy();
+        }
+
+        let lable_chart1 = null;
+        if (selectedCountry === "all") {
+          lable_chart1 = "Density of the world";
+        } else {
+          lable_chart1 = `Density of ${selectedCountry}`;
+        }
+
+        myChart = new Chart("myChart", {
+          type: "line",
+          data: {
+            labels: x_axis_density,
+            datasets: [
+              {
+                label: lable_chart1,
+                borderColor: "#8e5ea2",
+                fill: false,
+                data: y_axis_density,
+              },
+            ],
+          },
+          options: {
+            legend: { display: true },
+            title: {
+              display: true,
+              text: lable_chart1,
+            },
+          },
+        });
+      }
+
+      function update_chart_country_or_all_F(x_axis_density) {
+        if (selectedCountry === "all") {
+          addDataToChart(); // update chart if all selected again
+          return;
+        }
+
+        get(child(firebaseRef, `/Density_of_each_country/${selectedCountry}`)) //density of each individual country
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const data = snapshot.val();
+              let y_axis_density = Object.values(data);
+              updateChart(x_axis_density, y_axis_density);
+            } else {
+              console.log("No data found: ", selectedCountry);
+            }
+          })
+          .catch((error) => {
+            console.error("Error: ", error);
+          });
+      }
+
+      //CHART 2 BAR
+      let myChart2 = null;
+      let x_axis_stn_dev = [];
+      let y_axis_stn_dev = [];
+      let y_eu = [];
+      let y_noneu = [];
+      function gettingChart2() {
+        get(child(firebaseRef, "/")).then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val();
+
+            for (let [key, value] of Object.entries(data)) {
+              if (key === "Graph2_stn_dev") {
+                for (let [subKey, subValue] of Object.entries(value)) {
+                  if (subKey === "x_axis_stn_dev") {
+                    x_axis_stn_dev = subValue;
+                  } else if (subKey === "y_axis_stn_dev") {
+                    y_axis_stn_dev = subValue;
+                  }
+                }
+              }
+            }
+
+            get(child(firebaseRef, "/Graph2_stn_dev/y_eu")).then((snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val();
+                y_eu = Object.values(data);
+                //console.log("y_eu", y_eu);
+              }
+
+              get(child(firebaseRef, "/Graph2_stn_dev/y_not_eu")).then(
+                (snapshot) => {
+                  if (snapshot.exists()) {
+                    const data = snapshot.val();
+                    y_noneu = Object.values(data);
+                    //console.log("y_noneu", y_noneu);
+                  }
+
+                  updateChart2();
+                }
+              );
+            });
+          }
+        });
+      }
+
+      const Checkboxes = document.querySelectorAll(".color-checkbox");
+
+      function updateChart2() {
+        const colorChecked = Array.from(Checkboxes)
+          .filter((checkbox) => checkbox.checked)
+          .map((checkbox) => checkbox.value);
+        //console.log(colorChecked);
+
+        let newDatasets = [
+          {
+            label: "Overall Variation",
+            data: y_axis_stn_dev,
+            backgroundColor: [
+              "rgba(255, 99, 132, 0.7)",
+              "rgba(75, 192, 192, 0.7)",
+              "rgba(255, 205, 86, 0.7)",
+              "rgba(54, 162, 235, 0.7)",
+              "rgba(153, 102, 255, 0.7)",
+            ],
+            borderColor: "rgba(255,0,0,0.1)",
+          },
+        ];
+
+        if (colorChecked.includes("eu")) {
+          newDatasets.push({
+            label: "EU Variation",
+            data: y_eu,
+            backgroundColor: [
+              "rgba(255, 99, 132, 1)",
+              "rgba(75, 192, 192, 1)",
+              "rgba(255, 205, 86, 1)",
+              "rgba(54, 162, 235, 1)",
+              "rgba(153, 102, 255, 1)",
+            ],
+            borderColor: "rgba(255,0,0,0.1)",
+          });
+        }
+
+        if (colorChecked.includes("noneu")) {
+          newDatasets.push({
+            label: "Non EU Variation",
+            data: y_noneu,
+            backgroundColor: [
+              "#c45850",
+              "#3cba9f",
+              "#e8c3b9",
+              "#3e95cd",
+              "#8e5ea2",
+            ],
+            borderColor: "rgba(255,0,0,0.1)",
+          });
+        }
+
+        if (myChart2) {
+          myChart2.data.datasets = newDatasets;
+          myChart2.update();
+        } else {
+          myChart2 = new Chart("myChart2", {
+            type: "bar",
+            data: {
+              labels: x_axis_stn_dev,
+              datasets: newDatasets,
+            },
+            options: {
+              title: {
+                display: true,
+                text: "Variation in population size across the world over time",
+              },
+
+              legend: { display: true },
+            },
+          });
+        }
+      }
+
+      document.querySelectorAll(".color-checkbox").forEach((checkbox) => {
+        checkbox.addEventListener("change", updateChart2);
+      });
+
+      gettingChart2();
     </script>
   </body>
 </html>

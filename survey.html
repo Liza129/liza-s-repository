@@ -171,9 +171,9 @@
         let age = document.getElementById("age");
         let option = document.getElementById("occupation");
         let comment = document.getElementById("message");
-        newRecord["name"] = name.value.trim() ? name.value : null;
+        newRecord["name"] = name.value.trim() ? name.value : null; //if ?, :else
         newRecord["age"] = parseInt(age.value, 10) || null;
-        newRecord["option"] = option.value.trim() ? option.value : null;
+        newRecord["option"] = option.value.trim() ? option.value : null; //trim = strip in python
         newRecord["comment"] = comment.value.trim() ? comment.value : null;
 
         push(ref(database, "/User"), newRecord);
@@ -181,11 +181,11 @@
       let formsubmission = document.getElementById("form");
       formsubmission.addEventListener("submit", Updatingdatabase);
 
-      const nameArray = [];
-      const ageArray = [];
-      const commentArray = [];
-      const euArray = [];
-      const optionArray = [];
+      const name_l = [];
+      const age_l = [];
+      const comment_l = [];
+      const eu_l = [];
+      const option_l = [];
 
       get(child(firebaseRef, "/"))
         .then((snapshot) => {
@@ -196,30 +196,30 @@
                 for (let userKey in value) {
                   let userData = value[userKey];
 
-                  nameArray.push(userData.name || null);
-                  ageArray.push(userData.age || null);
-                  commentArray.push(userData.comment || null);
-                  euArray.push(userData.eu !== undefined ? userData.eu : null);
-                  optionArray.push(userData.option || null);
+                  name_l.push(userData.name || null);
+                  age_l.push(userData.age || null);
+                  comment_l.push(userData.comment || null);
+                  eu_l.push(userData.eu !== undefined ? userData.eu : null);
+                  option_l.push(userData.option || null);
                 }
               }
             }
-            const averageAge = calculateAverageAge(ageArray);
-            const studentPercentage = calculateCategoryPercentage(
-              optionArray,
+            const averageAge = calculateAverageAge(age_l);
+            const studentPercentage = calculatecategPercentage(
+              option_l,
               "Student"
             );
-            const preschoolPercentage = calculateCategoryPercentage(
-              optionArray,
+            const preschoolPercentage = calculatecategPercentage(
+              option_l,
               "Pre-school"
             );
-            const employedPercentage = calculateCategoryPercentage(
-              optionArray,
+            const employedPercentage = calculatecategPercentage(
+              option_l,
               "Employed"
             );
 
-            const euPercentage = calculateEuPercentage(euArray);
-            const nonEuPercentage = calculateEuPercentage(euArray, false);
+            const euPercentage = calculateEuPercentage(eu_l);
+            const nonEuPercentage = calculateEuPercentage(eu_l, false);
 
             document.getElementById("average-age").textContent =
               averageAge.toFixed(0);
@@ -245,41 +245,63 @@
           return 0;
         }
 
-        let filteredAges = ages.filter(
-          (age) => age !== null && age !== undefined
-        );
+        let filtered_ages = [];
+        for (let i = 0; i < ages.length; i++) {
+          if (ages[i] !== null && ages[i] !== undefined) {
+            filtered_ages.push(ages[i]);
+          }
+        }
 
-        if (filteredAges.length === 0) {
+        if (filtered_ages.length === 0) {
           return 0;
         }
 
-        let sum = filteredAges.reduce((acc, age) => acc + age, 0); //acc
-        return sum / filteredAges.length;
+        let sum = 0;
+
+        for (let i = 0; i < filtered_ages.length; i++) {
+          sum = sum + filtered_ages[i];
+        }
+        return sum / filtered_ages.length;
       }
 
-      function calculateCategoryPercentage(options, category) {
+      function calculatecategPercentage(options, categ) {
         if (options.length === 0) {
           return 0;
         }
+        let filt_opt = [];
+        for (let i = 0; i < options.length; i++) {
+          if (options[i] !== null && options[i] !== undefined) {
+            filt_opt.push(options[i]);
+          }
+        }
 
-        let filteredOptions = options.filter(
-          (option) => option !== null && option !== undefined
-        );
-        let count = filteredOptions.filter(
-          (option) => option === category
-        ).length;
-        return (count / filteredOptions.length) * 100;
+        let count = 0;
+        for (let i = 0; i < filt_opt.length; i++) {
+          if (filt_opt[i] === categ) {
+            count++;
+          }
+        }
+        return (count / filt_opt.length) * 100;
       }
 
-      function calculateEuPercentage(euArray, isEu = true) {
-        if (euArray.length === 0) {
+      function calculateEuPercentage(eu_l, isEu = true) {
+        if (eu_l.length === 0) {
           return 0;
         }
 
-        let filteredEu = euArray.filter(
-          (eu) => eu !== null && eu !== undefined
-        );
-        let count = filteredEu.filter((eu) => eu === isEu).length;
+        let filteredEu = [];
+        for (let i = 0; i < eu_l.length; i++) {
+          if (eu_l[i] !== null && eu_l[i] !== undefined) {
+            filteredEu.push(eu_l[i]);
+          }
+        }
+
+        let count = 0;
+        for (let i = 0; i < filteredEu.length; i++) {
+          if (filteredEu[i] === isEu) {
+            count++;
+          }
+        }
         return (count / filteredEu.length) * 100;
       }
     </script>
@@ -312,13 +334,13 @@
 
       #results p {
         font-size: 16px;
-        color: #444;
+        color: #414040;
         margin: 15px 0;
       }
 
       #results p span {
         font-weight: bold;
-        color: #254373;
+        color: #254475;
       }
 
       .formbold-form-wrapper {
@@ -327,7 +349,7 @@
         background: white;
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
         margin-bottom: 20px;
         margin-top: 20px;
       }
