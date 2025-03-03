@@ -1,5 +1,6 @@
 import pandas as pd
 import copy
+import math
 import matplotlib.pyplot as plt
 df = pd.read_csv("C:\\Users\\21YBratushkin.ACC\\Downloads\\countries-table.csv")
 import firebase_admin
@@ -58,10 +59,20 @@ for i in obj:
     if c <= 5:
         l_col_names.append(i)
     c += 1
+print(max(obj["pop2024"]))
 #create 2 other identical objects yo obj, one of which has only EU countries and the other will have only nonEU  
 obj_EU = copy.deepcopy(obj)
 obj_NotEU = copy.deepcopy(obj)
 eu = ["Austria","Belgium","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Ireland","Italy","Latvia","Lithuania","Luxembourg","Malta","Netherlands","Poland","Portugal","Romania","Slovakia","Slovenia","Spain","Sweden"]
+
+not_eu = []
+for i in obj["country"]:
+    if i not in eu:
+      not_eu.append(i)  
+growthRate = obj["growthRate"]
+pop2024 = obj["pop2024"]
+
+
 c = 0
 ##########################
 #TEST
@@ -125,7 +136,27 @@ def formula_den_F(year_p,land):
     density = year_p/land
     return density
 
+#transfer to the end
+def predicting_pop_F(obj):
+    k, p0 = ave_tot_pop_F(obj,"pop2024")#assuming initial population is in 2024 => P0
+    t = [5,10,30,50]#list of the timeframe for which I'm predicting population
+    rate,k = ave_tot_pop_F(obj,"growthRate")#getting average growth rate of the world
+    l_predicted_y = []#list of predicted population
+    for i in t:
+        c = p0*math.exp(rate*i)#formula for prediction
+        c = int(c)
+        l_predicted_y.append(c)
+    l_percentage_x = []
+    for i in l_predicted_y:
+        j = ((i-p0)/p0)*100
+        j = int(j)
+        j = str(j) + "%"
+        l_percentage_x.append(j)
+    return l_percentage_x,l_predicted_y
+l_percentage_x,l_predicted_y = predicting_pop_F(obj)
+print("predicted", l_percentage_x,l_predicted_y)
 
+        
 
 def density_of_each_country_points(l_col_names,obj):
     density_of_each_c_obj = {}
@@ -183,8 +214,15 @@ def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_
     return obj_firebase_density_countries
 obj_firebase_density_countries = country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj)
 print("our obj",obj_firebase_density_countries)
-
-
+"""
+ordered_dic = {}
+c = "1"
+for key,value in obj_firebase_density_countries.items():
+    a = str(c) + str(key)
+    ordered_dic[a] = value
+    c = str(c) + str(c)
+print("ordered_dic",ordered_dic)  
+  """  
 
 def points_density_F(l_col_names):
     total_pop_l = [] #[4445984509, 6169875598, 7019913954, 8089994739, 8160255134]
@@ -277,8 +315,16 @@ fb_dictionary={
         "x_axis_stn_dev":x_axis_stn_d,
         "y_axis_stn_dev":y_axis_stn_d_round
         },
+    "Graph3_pred":{
+        "x_axis_pred":l_percentage_x,
+        "y_axis_pred":l_predicted_y
+        },
     "Country_list": countries_to_js,
-    "Country_density":obj_firebase_density_countries
+    "Country_density":obj_firebase_density_countries,
+    "EU_c":eu,
+    "NonEU_c":not_eu,
+    "growthRate":growthRate,
+    "pop2024":pop2024
     }
 
 ref = db.reference('/')
@@ -303,4 +349,15 @@ plt.bar(left, y_axis_stn_d_round, tick_label = x_axis_stn_d,
 plt.xlabel('Time')
 plt.ylabel('Population')
 plt.title('Variation in population size across the world over time')
+plt.show()
+#pie
+"""
+plt.plot(l_percentage_x,l_predicted_y )
+plt.xlabel('Cumulative growth percentage')
+plt.ylabel('population')
+plt.title('Predicted population')
+plt.show()
+"""
+fig, ax = plt.subplots()
+ax.pie(y_axis_d_round, labels=list_n,autopct='%1.1f%%')
 plt.show()
