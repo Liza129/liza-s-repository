@@ -313,7 +313,9 @@ fb_dictionary={
         },
     "Graph2_stn_dev":{
         "x_axis_stn_dev":x_axis_stn_d,
-        "y_axis_stn_dev":y_axis_stn_d_round
+        "y_axis_stn_dev":y_axis_stn_d_round,
+        "y_eu":y_axis_stn_d_eu,
+        "y_not_eu":y_axis_stn_d_not_eu
         },
     "Graph3_pred":{
         "x_axis_pred":l_percentage_x,
