@@ -53,7 +53,8 @@
     </div>
     <canvas id="myChart2" style="width: 100%; max-width: 700px;"></canvas>
     <!--Chart3-->
-
+    <br />
+    <br />
     <canvas id="myChart3" style="width: 100%; max-width: 700px;"></canvas>
 
     <script type="module">
@@ -327,42 +328,54 @@
       })
 
       gettingChart2()
-
+      //CHART 3 PIE
       let x_axis_chart3 = []
       let y_axis_chart3 = []
+      const barColors = ['#b91d47', '#00aba9', '#2b5797', '#e8c3b9', '#1e7145']
 
       function gettingChart3() {
-        get(child(firebaseRef, '/Graph3_pred')).then((snapshot) => {
+        get(child(firebaseRef, '/Graph3_pred/x_axis_pred')).then((snapshot) => {
           if (snapshot.exists()) {
             const data = snapshot.val()
-            x_axis_chart3 = Object.keys(data)
-            y_axis_chart3 = Object.values(data)
-            console.log(
-              'x_axis_chart3',
-              x_axis_chart3,
-              'y_axis_chart3',
-              y_axis_chart3,
-            )
+            x_axis_chart3 = Object.values(data)
           }
 
-          new Chart('myChart3', {
-            type: 'pie',
-            data: {
-              labels: x_axis_chart3,
-              datasets: [
-                {
-                  //backgroundColor: barColors,
-                  data: y_axis_chart3,
+          get(child(firebaseRef, '/Graph3_pred/y_axis_pred')).then(
+            (snapshot) => {
+              if (snapshot.exists()) {
+                const data = snapshot.val()
+
+                y_axis_chart3 = Object.values(data)
+              }
+
+              // console.log(
+              //   'x_axis_chart3',
+              //   x_axis_chart3,
+              //   'y_axis_chart3',
+              //   y_axis_chart3,
+              // )
+
+              new Chart('myChart3', {
+                type: 'pie',
+                data: {
+                  labels: x_axis_chart3,
+                  datasets: [
+                    {
+                      backgroundColor: barColors,
+                      data: y_axis_chart3,
+                    },
+                  ],
                 },
-              ],
+                options: {
+                  title: {
+                    display: true,
+                    text:
+                      'Relation between an initial increase from current population to predicted population',
+                  },
+                },
+              })
             },
-            options: {
-              title: {
-                display: true,
-                text: 'Predicted',
-              },
-            },
-          })
+          )
         })
       }
       gettingChart3()

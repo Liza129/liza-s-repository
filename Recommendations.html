@@ -8,6 +8,9 @@
     <title>Recommendations</title>
   </head>
   <body>
+        <br />
+    <br />
+    <h2>Recommendations</h2>
     <div class="formbold-main-wrapper">
       <div class="formbold-form-wrapper">
         <form id="form">
@@ -74,8 +77,8 @@
             >
               <option value="all">Any</option>
               <option value="1">0 - 10 000 000</option>
-              <option value="2">10 000 000 - 500 000 000</option>
-              <option value="3">500 000 00 - 1 400 000 000 and more</option>
+            
+              <option value="2">10 000 000 - 1 400 000 000 and more</option>
               
             </select>
           </div>
@@ -86,7 +89,17 @@
         </form>
       </div>
     </div>
-
+<br>
+<br>
+     <h2>Results</h2>
+    <div id="results">
+      <p>
+        Recommended countries based on your choice:
+        <span id="#"></span>
+       
+      </p>
+      
+    </div>
     <script type="module">
 
 
@@ -133,16 +146,84 @@ const firebaseConfig = {
           console.log("Growth Rate:", rate);
           console.log("Population:", pop);
 
-  
-    return { density_alp, eu, rate, pop };
+  getting_from_fb()
+    //return { density_alp, eu, rate, pop };
   }
 
   let formsubmission = document.getElementById('form');
   formsubmission.addEventListener('submit', gettingrecommendations);
 
 
-  let list_score = []
-  let list_score_values = []
+  function cheking_density(list_score,density_alp,density_alp_less_10k,density_alp_more_10k){
+    if (density_alp == "all"){
+      for (let i of list_score){
+        list_score[i] += 1
+      }
+    }else if(density_alp == "1"){
+      for (let i of density_alp_less_10k){
+        list_score[i] += 1
+      }
+    }else{
+      for (let i of density_alp_more_10k){
+        list_score[i] += 1
+      }
+    }
+return list_score
+  }
+
+   function cheking_eu(list_score,eu,eu_c,non_eu_c){
+      if (eu == "all"){
+      for (let i of list_score){
+        list_score[i] += 1
+      }
+    }else if(eu == "1"){
+      for (let i of eu_c){
+        list_score[i] += 1
+      }
+    }else{
+      for (let i of non_eu_c){
+        list_score[i] += 1
+      }
+    }
+    return list_score
+   }
+
+    function cheking_rate(list_score,rate,growth_rate_not_alp_neg,growth_rate_not_alp_pos){
+      if (rate == "all"){
+      for (let i of list_score){
+        list_score[i] += 1
+      }
+    }else if(rate == "1"){
+      for (let i of growth_rate_not_alp_pos){
+        list_score[i] += 1
+      }
+    }else{
+      for (let i of growth_rate_not_alp_neg){
+        list_score[i] += 1
+      }
+    }
+    return list_score
+   }
+
+   function cheking_pop(list_score,pop,pop_not_alp_10,pop_not_alp_140){
+      if (pop == "all"){
+      for (let i of list_score){
+        list_score[i] += 1
+      }
+    }else if(pop == "1"){
+      for (let i of pop_not_alp_10){
+        list_score[i] += 1
+      }
+    }else{
+      for (let i of pop_not_alp_140){
+        list_score[i] += 1
+      }
+    }
+    return list_score
+   }
+
+  let list_score = {}
+ // let list_score_values = []
   let country_list_non_alp = []
   let density_alp = {}
   let density_alp_less_10k = {}
@@ -154,10 +235,9 @@ let growth_rate_not_alp_neg = {}
 let growth_rate_not_alp_pos = {}
  let pop_not_alp = {}
  let pop_not_alp_10 = {}
-  let pop_not_alp_50 = {}
     let pop_not_alp_140 = {}
 
-
+function getting_from_fb(){
   get(child(firebaseRef, "/Country_list")).then((snapshot) => {
               if (snapshot.exists()) {
                 const data = snapshot.val();
@@ -228,15 +308,41 @@ let growth_rate_not_alp_pos = {}
 // console.log("growth_rate_not_alp",growth_rate_not_alp_pos)
 // console.log("growth_rate_not_alp",growth_rate_not_alp_neg)
 
+// let pop_not_alp = {}
+//  let pop_not_alp_10 = {}
 
+//     let pop_not_alp_140 = {}
  get(child(firebaseRef, "/pop2024")).then((snapshot) => {
               if (snapshot.exists()) {
                 const data = snapshot.val();
-                pop_not_alp = Object.values(data);
+                let pop_not_alp_temp = Object.values(data);
                 //console.log("pop_not_alp", pop_not_alp);
+                country_list_non_alp.forEach((country, index) => {
+                    pop_not_alp[country] = pop_not_alp_temp[index];
+                    list_score[country] = 0
+
+                    if (pop_not_alp_temp[index] < 10000000) {
+                    pop_not_alp_10[country] = pop_not_alp_temp[index];
+                } else {
+                    pop_not_alp_140[country] = pop_not_alp_temp[index];
+                }
+
+                })
               }
-})//get
+
+
+
+              //console.log("pop_not_alp",pop_not_alp,"pop_not_alp_140",pop_not_alp_140,"pop_not_alp_10",pop_not_alp_10)
+
+list_score = cheking_density(list_score,density_alp,density_alp_less_10k,density_alp_more_10k)
+list_score = cheking_eu(list_score,eu,eu_c,non_eu_c)
+list_score = cheking_rate(list_score,rate,growth_rate_not_alp_neg,growth_rate_not_alp_pos)
+list_score = cheking_pop(list_score,pop,pop_not_alp_10,pop_not_alp_140)
+console.log(list_score )
+
+            })//get
 })})})})})
+}
     </script>
     <style>
       * {
@@ -244,6 +350,13 @@ let growth_rate_not_alp_pos = {}
         padding: 0;
         box-sizing: border-box;
         font-family: "Inter", sans-serif;
+      }
+       h2 {
+        font-size: 24px;
+        color: #333;
+        text-align: center;
+        margin-bottom: 15px;
+        margin-top: 10px;
       }
       .formbold-form-wrapper {
         max-width: 500px;
