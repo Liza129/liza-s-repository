@@ -146,12 +146,20 @@ def predicting_pop_F(obj):
         c = p0*math.exp(rate*i)#formula for prediction
         c = int(c)
         l_predicted_y.append(c)
-    l_percentage_x = []
+    l_percentage_x1 = []
     for i in l_predicted_y:
         j = ((i-p0)/p0)*100
         j = int(j)
         j = str(j) + "%"
-        l_percentage_x.append(j)
+        l_percentage_x1.append(j)
+    years = [2030,2025,2055,2075]
+    c = 0
+    l_percentage_x = []
+    for i in l_percentage_x1:
+        i = str(i)+" in "+str(years[c])
+        l_percentage_x.append(i)
+        c +=1
+        
     return l_percentage_x,l_predicted_y
 l_percentage_x,l_predicted_y = predicting_pop_F(obj)
 print("predicted", l_percentage_x,l_predicted_y)
