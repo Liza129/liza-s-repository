@@ -20,13 +20,12 @@
       <option value="all">All Countries</option>
     </select>
 
-    <canvas id="myChart" style="width: 100%; max-width: 700px"></canvas>
+    <canvas id="myChart" style="width: 100%; max-width: 700px;"></canvas>
 
     <!--Chart2-->
-    <label for="stndev"
-      >Tick checkboxs to show variation in population sizes between the
-      folowing:</label
-    >
+    <label for="stndev">
+      Tick checkboxs to show variation in population sizes between the folowing:
+    </label>
     <div>
       <!-- <label
         ><input
@@ -35,40 +34,42 @@
           value="all"
         />All</label
       > -->
-      <label
-        ><input
+      <label>
+        <input
           type="checkbox"
           class="filter-checkbox color-checkbox"
           value="eu"
-        />EU</label
-      >
-      <label
-        ><input
+        />
+        EU
+      </label>
+      <label>
+        <input
           type="checkbox"
           class="filter-checkbox color-checkbox"
           value="noneu"
-        />Non EU</label
-      >
+        />
+        Non EU
+      </label>
     </div>
-    <canvas id="myChart2" style="width: 100%; max-width: 700px"></canvas>
+    <canvas id="myChart2" style="width: 100%; max-width: 700px;"></canvas>
     <!--Chart3-->
 
-    <canvas id="myChart3" style="width: 100%; max-width: 700px"></canvas>
+    <canvas id="myChart3" style="width: 100%; max-width: 700px;"></canvas>
 
     <script type="module">
       const firebaseConfig = {
-        apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
-        authDomain: "project-cb978.firebaseapp.com",
+        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
+        authDomain: 'project-cb978.firebaseapp.com',
         databaseURL:
-          "https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "project-cb978",
-        storageBucket: "project-cb978.firebasestorage.app",
-        messagingSenderId: "396597845049",
-        appId: "1:81524826446:web:596f420c323372555ebe1f",
-      };
+          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
+        projectId: 'project-cb978',
+        storageBucket: 'project-cb978.firebasestorage.app',
+        messagingSenderId: '396597845049',
+        appId: '1:81524826446:web:596f420c323372555ebe1f',
+      }
 
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-      const app = initializeApp(firebaseConfig);
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
+      const app = initializeApp(firebaseConfig)
       import {
         getDatabase,
         ref,
@@ -78,92 +79,92 @@
         child,
         query,
         orderByChild,
-      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
+      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
 
-      const database = getDatabase();
-      const firebaseRef = ref(database);
+      const database = getDatabase()
+      const firebaseRef = ref(database)
 
       //CHART 1 LINE
-      let selectedCountry = "all";
-      let myChart = null;
+      let selectedCountry = 'all'
+      let myChart = null
 
       function addDataToChart() {
-        let x_axis_density = [];
-        let y_axis_density = [];
+        let x_axis_density = []
+        let y_axis_density = []
         // let x_axis_stn_dev = [];
         // let y_axis_stn_dev = [];
-        let Country_list = [];
+        let Country_list = []
 
-        get(child(firebaseRef, "/"))
+        get(child(firebaseRef, '/'))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              const data = snapshot.val();
+              const data = snapshot.val()
 
               for (let [key, value] of Object.entries(data)) {
-                if (key === "Graph1_density") {
+                if (key === 'Graph1_density') {
                   for (let [subKey, subValue] of Object.entries(value)) {
-                    if (subKey === "x_axis_density") {
-                      x_axis_density = subValue;
-                    } else if (subKey === "y_axis_density") {
-                      y_axis_density = subValue;
+                    if (subKey === 'x_axis_density') {
+                      x_axis_density = subValue
+                    } else if (subKey === 'y_axis_density') {
+                      y_axis_density = subValue
                     }
                   }
-                } else if (key === "Country_list") {
-                  Country_list = value; //list of all countries for filter
+                } else if (key === 'Country_list') {
+                  Country_list = value //list of all countries for filter
                 }
               }
 
-              Test(Country_list, x_axis_density); // filter
-              updateChart(x_axis_density, y_axis_density); // chart
+              Test(Country_list, x_axis_density) // filter
+              updateChart(x_axis_density, y_axis_density) // chart
             } else {
-              console.log("No data found in Firebase root.");
+              console.log('No data found in Firebase root.')
             }
           })
           .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
+            console.error('Error fetching data:', error)
+          })
       }
 
-      addDataToChart();
+      addDataToChart()
 
       function Test(Country_list, x_axis_density) {
-        let select = document.getElementById("selectElementId");
+        let select = document.getElementById('selectElementId')
 
         for (let country of Country_list) {
           //create all the options, set all to default
-          let opt = document.createElement("option");
-          opt.value = country;
-          opt.innerHTML = country;
-          select.appendChild(opt);
+          let opt = document.createElement('option')
+          opt.value = country
+          opt.innerHTML = country
+          select.appendChild(opt)
         }
 
-        select.addEventListener("change", function () {
-          selectedCountry = this.value; //this.value is the option selected in dropdown menu => "Ireland"//this is the option on the <select>
+        select.addEventListener('change', function () {
+          selectedCountry = this.value //this.value is the option selected in dropdown menu => "Ireland"//this is the option on the <select>
           //console.log("country:", selectedCountry);
-          update_chart_country_or_all_F(x_axis_density);
-        });
+          update_chart_country_or_all_F(x_axis_density)
+        })
       }
 
       function updateChart(x_axis_density, y_axis_density) {
         if (myChart) {
-          myChart.destroy();
+          myChart.destroy()
         }
 
-        let lable_chart1 = null;
-        if (selectedCountry === "all") {
-          lable_chart1 = "Density of the world";
+        let lable_chart1 = null
+        if (selectedCountry === 'all') {
+          lable_chart1 = 'Density of the world'
         } else {
-          lable_chart1 = `Density of ${selectedCountry}`;
+          lable_chart1 = `Density of ${selectedCountry}`
         }
 
-        myChart = new Chart("myChart", {
-          type: "line",
+        myChart = new Chart('myChart', {
+          type: 'line',
           data: {
             labels: x_axis_density,
             datasets: [
               {
                 label: lable_chart1,
-                borderColor: "#8e5ea2",
+                borderColor: '#8e5ea2',
                 fill: false,
                 data: y_axis_density,
               },
@@ -176,135 +177,135 @@
               text: lable_chart1,
             },
           },
-        });
+        })
       }
 
       function update_chart_country_or_all_F(x_axis_density) {
-        if (selectedCountry === "all") {
-          addDataToChart(); // update chart if all selected again
-          return;
+        if (selectedCountry === 'all') {
+          addDataToChart() // update chart if all selected again
+          return
         }
 
-        get(child(firebaseRef, `/Density_of_each_country/${selectedCountry}`)) //density of each individual country
+        get(child(firebaseRef, `/Country_density/${selectedCountry}`)) //density of each individual country
           .then((snapshot) => {
             if (snapshot.exists()) {
-              const data = snapshot.val();
-              let y_axis_density = Object.values(data);
-              updateChart(x_axis_density, y_axis_density);
+              const data = snapshot.val()
+              let y_axis_density = Object.values(data)
+              updateChart(x_axis_density, y_axis_density)
             } else {
-              console.log("No data found: ", selectedCountry);
+              console.log('No data found: ', selectedCountry)
             }
           })
           .catch((error) => {
-            console.error("Error: ", error);
-          });
+            console.error('Error: ', error)
+          })
       }
 
       //CHART 2 BAR
-      let myChart2 = null;
-      let x_axis_stn_dev = [];
-      let y_axis_stn_dev = [];
-      let y_eu = [];
-      let y_noneu = [];
+      let myChart2 = null
+      let x_axis_stn_dev = []
+      let y_axis_stn_dev = []
+      let y_eu = []
+      let y_noneu = []
       function gettingChart2() {
-        get(child(firebaseRef, "/")).then((snapshot) => {
+        get(child(firebaseRef, '/')).then((snapshot) => {
           if (snapshot.exists()) {
-            const data = snapshot.val();
+            const data = snapshot.val()
 
             for (let [key, value] of Object.entries(data)) {
-              if (key === "Graph2_stn_dev") {
+              if (key === 'Graph2_stn_dev') {
                 for (let [subKey, subValue] of Object.entries(value)) {
-                  if (subKey === "x_axis_stn_dev") {
-                    x_axis_stn_dev = subValue;
-                  } else if (subKey === "y_axis_stn_dev") {
-                    y_axis_stn_dev = subValue;
+                  if (subKey === 'x_axis_stn_dev') {
+                    x_axis_stn_dev = subValue
+                  } else if (subKey === 'y_axis_stn_dev') {
+                    y_axis_stn_dev = subValue
                   }
                 }
               }
             }
 
-            get(child(firebaseRef, "/Graph2_stn_dev/y_eu")).then((snapshot) => {
+            get(child(firebaseRef, '/Graph2_stn_dev/y_eu')).then((snapshot) => {
               if (snapshot.exists()) {
-                const data = snapshot.val();
-                y_eu = Object.values(data);
+                const data = snapshot.val()
+                y_eu = Object.values(data)
                 //console.log("y_eu", y_eu);
               }
 
-              get(child(firebaseRef, "/Graph2_stn_dev/y_not_eu")).then(
+              get(child(firebaseRef, '/Graph2_stn_dev/y_not_eu')).then(
                 (snapshot) => {
                   if (snapshot.exists()) {
-                    const data = snapshot.val();
-                    y_noneu = Object.values(data);
+                    const data = snapshot.val()
+                    y_noneu = Object.values(data)
                     //console.log("y_noneu", y_noneu);
                   }
 
-                  updateChart2();
-                }
-              );
-            });
+                  updateChart2()
+                },
+              )
+            })
           }
-        });
+        })
       }
 
-      const Checkboxes = document.querySelectorAll(".color-checkbox");
+      const Checkboxes = document.querySelectorAll('.color-checkbox')
 
       function updateChart2() {
         const colorChecked = Array.from(Checkboxes)
           .filter((checkbox) => checkbox.checked)
-          .map((checkbox) => checkbox.value);
+          .map((checkbox) => checkbox.value)
         //console.log(colorChecked);
 
         let newDatasets = [
           {
-            label: "Overall Variation",
+            label: 'Overall Variation',
             data: y_axis_stn_dev,
             backgroundColor: [
-              "rgba(255, 99, 132, 0.7)",
-              "rgba(75, 192, 192, 0.7)",
-              "rgba(255, 205, 86, 0.7)",
-              "rgba(54, 162, 235, 0.7)",
-              "rgba(153, 102, 255, 0.7)",
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(255, 205, 86, 0.7)',
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(153, 102, 255, 0.7)',
             ],
-            borderColor: "rgba(255,0,0,0.1)",
+            borderColor: 'rgba(255,0,0,0.1)',
           },
-        ];
+        ]
 
-        if (colorChecked.includes("eu")) {
+        if (colorChecked.includes('eu')) {
           newDatasets.push({
-            label: "EU Variation",
+            label: 'EU Variation',
             data: y_eu,
             backgroundColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(75, 192, 192, 1)",
-              "rgba(255, 205, 86, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(153, 102, 255, 1)",
+              'rgba(255, 99, 132, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(255, 205, 86, 1)',
+              'rgba(54, 162, 235, 1)',
+              'rgba(153, 102, 255, 1)',
             ],
-            borderColor: "rgba(255,0,0,0.1)",
-          });
+            borderColor: 'rgba(255,0,0,0.1)',
+          })
         }
 
-        if (colorChecked.includes("noneu")) {
+        if (colorChecked.includes('noneu')) {
           newDatasets.push({
-            label: "Non EU Variation",
+            label: 'Non EU Variation',
             data: y_noneu,
             backgroundColor: [
-              "#c45850",
-              "#3cba9f",
-              "#e8c3b9",
-              "#3e95cd",
-              "#8e5ea2",
+              '#c45850',
+              '#3cba9f',
+              '#e8c3b9',
+              '#3e95cd',
+              '#8e5ea2',
             ],
-            borderColor: "rgba(255,0,0,0.1)",
-          });
+            borderColor: 'rgba(255,0,0,0.1)',
+          })
         }
 
         if (myChart2) {
-          myChart2.data.datasets = newDatasets;
-          myChart2.update();
+          myChart2.data.datasets = newDatasets
+          myChart2.update()
         } else {
-          myChart2 = new Chart("myChart2", {
-            type: "bar",
+          myChart2 = new Chart('myChart2', {
+            type: 'bar',
             data: {
               labels: x_axis_stn_dev,
               datasets: newDatasets,
@@ -312,20 +313,59 @@
             options: {
               title: {
                 display: true,
-                text: "Variation in population size across the world over time",
+                text: 'Variation in population size across the world over time',
               },
 
               legend: { display: true },
             },
-          });
+          })
         }
       }
 
-      document.querySelectorAll(".color-checkbox").forEach((checkbox) => {
-        checkbox.addEventListener("change", updateChart2);
-      });
+      document.querySelectorAll('.color-checkbox').forEach((checkbox) => {
+        checkbox.addEventListener('change', updateChart2)
+      })
 
-      gettingChart2();
+      gettingChart2()
+
+      let x_axis_chart3 = []
+      let y_axis_chart3 = []
+
+      function gettingChart3() {
+        get(child(firebaseRef, '/Graph3_pred')).then((snapshot) => {
+          if (snapshot.exists()) {
+            const data = snapshot.val()
+            x_axis_chart3 = Object.keys(data)
+            y_axis_chart3 = Object.values(data)
+            console.log(
+              'x_axis_chart3',
+              x_axis_chart3,
+              'y_axis_chart3',
+              y_axis_chart3,
+            )
+          }
+
+          new Chart('myChart3', {
+            type: 'pie',
+            data: {
+              labels: x_axis_chart3,
+              datasets: [
+                {
+                  //backgroundColor: barColors,
+                  data: y_axis_chart3,
+                },
+              ],
+            },
+            options: {
+              title: {
+                display: true,
+                text: 'Predicted',
+              },
+            },
+          })
+        })
+      }
+      gettingChart3()
     </script>
   </body>
 </html>
