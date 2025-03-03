@@ -9,21 +9,21 @@ from firebase_admin import db
 cred = credentials.Certificate("project-cb978-firebase-adminsdk-o6ddb-e3a40dcfc5.json")
 firebase_admin.initialize_app(cred, {'databaseURL':'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app/'})
 
-df = df.drop(columns = ["place","pop2030", "pop2050","area", "cca2","cca3","netChange","worldPercentage","density","densityMi"])
+df = df.drop(columns = ["place","pop2030", "pop2050","area", "cca2","cca3","netChange","unMember","worldPercentage","density","densityMi"])
 
 #df = df.fillna(0)# The colums where the values are missing are filled them with 0 === apply only to numeric columns
 
 df.drop_duplicates(subset=['country'], inplace=True)
 
-df = df.drop_duplicates(subset='rank', keep='first')
+df = df.drop_duplicates(subset='rank', keep='first')#
 
 #already have it as astype()df["pop1980","pop2000","pop2010", "pop2023", "pop2024", "landAreaKm","growthRate"] = pd.to_numeric(df["pop1980","pop2000","pop2010", "pop2023", "pop2024", "landAreaKm","growthRate"], errors='coerce')
 
-df.dropna(how='all', inplace=True)
+df.dropna(how='all', inplace=True)#
 
-df = df[df != 'invalid_value']
+df = df[df != 'invalid_value']#
 
-df = df.astype({"pop1980":int, "pop2000":int,"pop2010":int, "pop2023":int, "pop2024":int,"unMember":bool,"landAreaKm":float, "country":str,"growthRate":float,"rank":int})
+df = df.astype({"pop1980":int, "pop2000":int,"pop2010":int, "pop2023":int, "pop2024":int,"landAreaKm":float, "country":str,"growthRate":float,"rank":int})
 
 df = df.round({"pop1980":0, "pop2000":0,"pop2010":0, "pop2023":0, "pop2024":0,"landAreaKm":2})
 
@@ -41,7 +41,7 @@ pop2023
 pop2024
 country
 landAreaKm
-unMember
+//unMember
 growthRate
 rank
 """
@@ -59,7 +59,7 @@ for i in obj:
     if c <= 5:
         l_col_names.append(i)
     c += 1
-print(max(obj["pop2024"]))
+#print(max(obj["pop2024"]))
 #create 2 other identical objects yo obj, one of which has only EU countries and the other will have only nonEU  
 obj_EU = copy.deepcopy(obj)
 obj_NotEU = copy.deepcopy(obj)
@@ -111,9 +111,9 @@ for key in obj_EU:
 #             
 #     c+=1
 #     
-print(obj)
-print('EU',obj_EU)
-print('Non-EU',obj_NotEU)
+#print(obj)
+#print('EU',obj_EU)
+#print('Non-EU',obj_NotEU)
 
 #Density
 #Total land area
@@ -160,9 +160,9 @@ def predicting_pop_F(obj):
         l_percentage_x.append(i)
         c +=1
         
-    return l_percentage_x,l_predicted_y
-l_percentage_x,l_predicted_y = predicting_pop_F(obj)
-print("predicted", l_percentage_x,l_predicted_y)
+    return l_percentage_x,l_predicted_y,years
+l_percentage_x,l_predicted_y,years = predicting_pop_F(obj)
+#print("predicted", l_percentage_x,l_predicted_y)
 
         
 
@@ -186,7 +186,7 @@ def density_of_each_country_points(l_col_names,obj):
     return density_of_each_c_obj
 
 density_of_each_c_obj = density_of_each_country_points(l_col_names,obj)
-print("not sorted",density_of_each_c_obj)
+#print("not sorted",density_of_each_c_obj)
 
 def sort_each_value_of_density_country_obj(density_of_each_c_obj):
     obj2 = {}#dictionary with from gratest to least densities
@@ -196,7 +196,7 @@ def sort_each_value_of_density_country_obj(density_of_each_c_obj):
         obj2[key] = value
     return obj2
 sorted_density_of_each_c_obj = sort_each_value_of_density_country_obj(copy.deepcopy(density_of_each_c_obj))
-print("sorted",sorted_density_of_each_c_obj)
+#print("sorted",sorted_density_of_each_c_obj)
 ## create a dictionary with key as a country and value[#,#,#,#,#] which shows density in each year + add show top 1,top2,top3 and least 1
     #by default show all top 1,top2,top3
     
@@ -221,7 +221,7 @@ def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_
                  
     return obj_firebase_density_countries
 obj_firebase_density_countries = country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj)
-print("our obj",obj_firebase_density_countries)
+#print("our obj",obj_firebase_density_countries)
 """
 ordered_dic = {}
 c = "1"
@@ -311,7 +311,7 @@ for x in y_axis_stn_d:
     x = round(x,1)
     y_axis_stn_d_round.append(x)
 
-print("Density: \nx-axis: ",x_axis_d,"\ny-axis:",y_axis_d_round,"\nStandard deviation:","\nx-axis:",x_axis_stn_d,"\ny-axis:",y_axis_stn_d_round)
+#print("Density: \nx-axis: ",x_axis_d,"\ny-axis:",y_axis_d_round,"\nStandard deviation:","\nx-axis:",x_axis_stn_d,"\ny-axis:",y_axis_stn_d_round)
 
 #firebase
 fb_dictionary={
@@ -368,6 +368,14 @@ plt.ylabel('population')
 plt.title('Predicted population')
 plt.show()
 """
+years2 = []
+for i in years:
+    i = str(i)
+    years2.append(i)
+    
+#print("years2",years2,"y_axis_d_round",y_axis_d_round,"list_n",list_n,"l_predicted_y",l_predicted_y)
 fig, ax = plt.subplots()
-ax.pie(y_axis_d_round, labels=list_n,autopct='%1.1f%%')
+ax.pie(l_predicted_y, labels=years2,autopct='%1.1f%%')
+plt.title('Predicted population')
+
 plt.show()
