@@ -27,13 +27,6 @@
       Tick checkboxs to show variation in population sizes between the folowing:
     </label>
     <div>
-      <!-- <label
-        ><input
-          type="checkbox"
-          class="filter-checkbox color-checkbox"
-          value="all"
-        />All</label
-      > -->
       <label>
         <input
           type="checkbox"
@@ -92,8 +85,7 @@
       function addDataToChart() {
         let x_axis_density = []
         let y_axis_density = []
-        // let x_axis_stn_dev = [];
-        // let y_axis_stn_dev = [];
+
         let Country_list = []
 
         get(child(firebaseRef, '/'))
@@ -205,7 +197,7 @@
       //CHART 2 BAR
       let myChart2 = null
       let x_axis_stn_dev = []
-      let y_axis_stn_dev = []
+      let x_axis_stn_dev = []
       let y_eu = []
       let y_noneu = []
       function gettingChart2() {

@@ -74,8 +74,7 @@ pop2024 = obj["pop2024"]
 
 
 c = 0
-##########################
-#TEST
+
 EUIndexes = []
 NonEUIndexes = []
 for i in obj["country"]:
@@ -94,23 +93,7 @@ for key in obj_EU:
     tmp = obj_EU[key]
     obj_EU[key] = [value for indexPos, value in enumerate(tmp) if indexPos in EUIndexes]
 
-
-#########################
-# for i in obj["country"]:
-#     if i in eu:
-#        for key in obj_NotEU:
-#            obj_NotEU[key].pop(c)
-#            tmp = obj_NotEU[key]
-#            obj_NotEU[key] = tmp
-# 
-#     else:
-#         for key in obj_EU:
-#             obj_EU[key].pop(c)
-#             tmp = obj_EU[key]
-#             obj_EU[key] = tmp
-#             
-#     c+=1
-#     
+    
 #print(obj)
 #print('EU',obj_EU)
 #print('Non-EU',obj_NotEU)
@@ -222,15 +205,7 @@ def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_
     return obj_firebase_density_countries
 obj_firebase_density_countries = country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj)
 #print("our obj",obj_firebase_density_countries)
-"""
-ordered_dic = {}
-c = "1"
-for key,value in obj_firebase_density_countries.items():
-    a = str(c) + str(key)
-    ordered_dic[a] = value
-    c = str(c) + str(c)
-print("ordered_dic",ordered_dic)  
-  """  
+
 
 def points_density_F(l_col_names):
     total_pop_l = [] #[4445984509, 6169875598, 7019913954, 8089994739, 8160255134]
