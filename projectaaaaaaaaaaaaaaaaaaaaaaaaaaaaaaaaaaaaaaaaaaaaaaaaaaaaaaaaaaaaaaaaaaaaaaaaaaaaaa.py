@@ -82,17 +82,18 @@ c = 0
 EUIndexes = []
 NonEUIndexes = []
 for i in obj["country"]:
-    if i in eu:
+    if i in eu: #Check if the country i is in the EU list
         EUIndexes.append(c)
     else:
         NonEUIndexes.append(c)
     c+=1   
 
-for key in obj_NotEU:
-    tmp = obj_NotEU[key]
+for key in obj_NotEU:#Loop through the keys in the obj_NotEU object
+    tmp = obj_NotEU[key] #get list with values for that country
+    #Update values for the current key, keeping only values which index is in NonEUIndexes
     obj_NotEU[key] = [value for indexPos, value in enumerate(tmp) if indexPos in NonEUIndexes]
            
-
+#repeat the same process for eu countries
 for key in obj_EU:
     tmp = obj_EU[key]
     obj_EU[key] = [value for indexPos, value in enumerate(tmp) if indexPos in EUIndexes]
@@ -379,7 +380,6 @@ plt.plot(l_percentage_x,l_predicted_y )
 plt.xlabel('Cumulative growth percentage')
 plt.ylabel('population')
 plt.title('Predicted population')
-plt.show()
 """
 years2 = []
 for i in years:
