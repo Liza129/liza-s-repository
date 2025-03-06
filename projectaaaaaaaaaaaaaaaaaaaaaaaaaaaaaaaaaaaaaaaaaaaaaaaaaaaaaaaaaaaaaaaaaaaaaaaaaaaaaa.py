@@ -131,14 +131,16 @@ def density_of_each_country_points(l_col_names,obj):
     density_of_each_c_obj = {}
     c = 0
     
+    #layout of the dictionary
+    #Example
+    #{"1980":[density country 1,density country 2...], "2000":[density country 1,density country 2...],...}
+    
     for x in obj["country"]:
         for i in l_col_names:
             year_p = obj[i][c]#get population of a specific country in a specific year
             land = obj["land_area"][c]#get land area of that country
             density = formula_den_F(year_p,land)#calculate density
             
-            #layout of the dictionary
-            #density_of_each_c_obj[India] = ["density in year1","density in year2","density in year3","density in year4","density in year5"]
             
             if i in density_of_each_c_obj:#if country is already in density_of_each_c_obj append to the end of the list
                 density_of_each_c_obj[i] += [density]
@@ -153,19 +155,15 @@ density_of_each_c_obj = density_of_each_country_points(l_col_names,obj)
 #print("not sorted",density_of_each_c_obj)
 
 
-
-
-
-
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-
-
 #function which sorts dictionary with all individuall countries, from least density to highest
 def sort_each_value_of_density_country_obj(density_of_each_c_obj):
     obj2 = {}#dictionary with from gratest to least densities
     
-    for key,value in density_of_each_c_obj.items():
+    #layout of the dictionary
+    #Example
+    #{"1980":[lowest density country x,sencond lowest density country y...], "2000":[lowest density country x,sencond lowest density country y...],...}
+    
+    for key,value in density_of_each_c_obj.items():#sort values in ascending order
         value.sort()
         obj2[key] = value
     return obj2
@@ -178,64 +176,80 @@ sorted_density_of_each_c_obj = sort_each_value_of_density_country_obj(copy.deepc
 def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj):  
     obj_firebase_density_countries = {}
     
+    #layout of the dictionary
+    #Example
+    #density_of_each_c_obj[India] = ["density in year1","density in year2","density in year3","density in year4","density in year5"]
+    #countries are arranged based on their density from lowest density to highest
+    #Greenland will come before India as it is not as dense
+    
     for key,value in sorted_density_of_each_c_obj.items():
         for i in value:
             try:
+                #Find index position of country which corresonds to the density value in density_of_each_c_obj
                 indexPosition = density_of_each_c_obj["pop1980"].index(i)
-                if obj["country"][indexPosition] not in obj_firebase_density_countries:
+                if obj["country"][indexPosition] not in obj_firebase_density_countries: #if country is not in obj_firebase_density_countries create an empty list to store densities
                     obj_firebase_density_countries[obj["country"][indexPosition]]=[]
+                    #Loop through all the year columns and add corresponding density to the dictionary
                     for everyYear in l_col_names:
-                        
                         obj_firebase_density_countries[obj["country"][indexPosition]]+=[density_of_each_c_obj[everyYear][indexPosition] ]
                 
             except:
                 print('Unable to find value at position: ',i)
                 break
-        break
+        break#break to speed up process 
                  
     return obj_firebase_density_countries
 obj_firebase_density_countries = country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj)
 #print("our obj",obj_firebase_density_countries)
 
-
+#function to calculate density of the world for default chart 1
 def points_density_F(l_col_names):
-    total_pop_l = [] #[4445984509, 6169875598, 7019913954, 8089994739, 8160255134]
+    total_pop_l = [] #Total population of the world #[4445984509, 6169875598, 7019913954, 8089994739, 8160255134]
     for i in l_col_names:
         n,x = ave_tot_pop_F(obj,i)
-        total_pop_l.append(x)
-    land = tot_land_F(obj)
-    density_l = []#[34.1043172256064, 47.32796396630899, 53.84844951642114, 62.05683946352743, 62.5957938378906]
+        total_pop_l.append(x)#append total population of the year
+        
+    land = tot_land_F(obj)#get total land area of the world
+    density_l = []#store y-axis values of the graph #[34.1043172256064, 47.32796396630899, 53.84844951642114, 62.05683946352743, 62.5957938378906]
     for year_p in total_pop_l:
-        g = formula_den_F(year_p,land)
+        g = formula_den_F(year_p,land)#use function to find density by dividing population by land area
         density_l.append(g)
     return density_l, [1980,2000,2010,2023,2024], total_pop_l
-y_axis_d, x_axis_d, total_pop_l = points_density_F(l_col_names)#points on the graph[34.1043172256064, 47.32796396630899, 53.84844951642114, 62.05683946352743, 62.5957938378906] [1980, 2000, 2010, 2023, 2024]
+y_axis_d, x_axis_d, total_pop_l = points_density_F(l_col_names)
+
+
+
 
 #Standard dev
 
+#function to return a list with average population of the world during the years
 def ave_pop_in_list_F(l_col_names,obj):
     ave_pop_l = []#[18999933.7991453, 26366989.735042736, 29999632.282051284, 34572627.08974359, 34872885.18803419]
     for i in l_col_names:
-        n,x = ave_tot_pop_F(obj,i)
-        ave_pop_l.append(n)
+        n,x = ave_tot_pop_F(obj,i)#call function to get average population of one year
+        ave_pop_l.append(n)#append it to a list
     return ave_pop_l
 
+#function to return a list with "population - mean" of the world during the years
 def country_pop_min_mean_F(obj,key,c):
-    l = []#list of each country in the particular year - mean
+    l = []#list of population(of a country/world) - mean population 
     for i in obj[key]:
-        l.append(i - ave_pop_in_list_F(l_col_names,obj)[c])
+        l.append(i - ave_pop_in_list_F(l_col_names,obj)[c])#call function to get mean value
     return l
 
+#function to calculate points for standard deviation => default chart 2
 def points_stn_dev_F(l_col_names,obj):
     #pop-mean
     pop_country_less_ave_d = {}
+    #add 5 years as keys and empty lists as values
     for i in l_col_names:
         pop_country_less_ave_d[i] = []
+    
     c = 0
     for key in pop_country_less_ave_d:
-        pop_country_less_ave_d[key] = country_pop_min_mean_F(obj,key,c)
+        pop_country_less_ave_d[key] = country_pop_min_mean_F(obj,key,c)#append return value from function to the dictionary
         c += 1
-    #square each
+    #square each value
     c = 0
     for key in pop_country_less_ave_d:
         for i in pop_country_less_ave_d[key]:
@@ -243,7 +257,7 @@ def points_stn_dev_F(l_col_names,obj):
             pop_country_less_ave_d[key][c] = i
             c+=1
         c = 0
-    #sum all
+    #sum all values 
     sum_in_each_year = 0
     for key in pop_country_less_ave_d:
         for i in pop_country_less_ave_d[key]:
@@ -256,16 +270,16 @@ def points_stn_dev_F(l_col_names,obj):
         pop_country_less_ave_d[key] = sum_in_each_year
         sum_in_each_year = 0
     
-    y_axis = []#[81420952.09280767, 111697438.90249301, 124320333.94819558, 137498838.86868116, 138051643.75059503]
+    y_axis = []#store y-axis co-ordinate of the graph #[81420952.09280767, 111697438.90249301, 124320333.94819558, 137498838.86868116, 138051643.75059503]
     for key in pop_country_less_ave_d:
         y_axis.append(pop_country_less_ave_d[key])
     return y_axis, [1980,2000,2010,2023,2024]
 
 y_axis_stn_d,x_axis_stn_d = points_stn_dev_F(l_col_names,obj)
 
+#calculate standard deviation for EU/non-EU contries only
 y_axis_stn_d_eu,x_axis_stn_d_eu = points_stn_dev_F(l_col_names,obj_EU)
 y_axis_stn_d_not_eu,x_axis_stn_d_not_eu = points_stn_dev_F(l_col_names,obj_NotEU)
-#POINTS111111111!"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 y_axis_d_round = []
 y_axis_stn_d_round = []
@@ -340,7 +354,7 @@ ref = db.reference('/')
 ref.set(fb_dictionary)
 
 #plotting the points on the graph
-#plt.plot(x1, y1, label = "line 1")
+
 #line
 list_n = ["1980", "2000", "2010", "2023", "2024"]
 plt.plot(list_n, y_axis_d_round)
@@ -357,6 +371,7 @@ plt.bar(left, y_axis_stn_d_round, tick_label = x_axis_stn_d,
 plt.xlabel('Time')
 plt.ylabel('Population')
 plt.title('Variation in population size across the world over time')
+#plt.legend()
 plt.show()
 #pie
 """
@@ -374,6 +389,7 @@ for i in years:
 #print("years2",years2,"l_predicted_y",l_predicted_y,"l_percentage_x",l_percentage_x)
 fig, ax = plt.subplots()
 ax.pie(l_predicted_y, labels=l_percentage_x)
+#autopct='%1.1f%%'
 plt.title('Predicted population')
-
+#plt.legend()
 plt.show()
