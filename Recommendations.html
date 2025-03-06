@@ -168,6 +168,8 @@ const firebaseConfig = {
 
   function cheking_density(list_score,density_alp,density_alp_less_10k,density_alp_more_10k,density){
     //console.log(density)
+
+    //checks the density question and adds a score to countries with range of density selected by user
     if (density == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -187,7 +189,7 @@ return list_score
   }
 
    function cheking_eu(list_score,eu,eu_c,non_eu_c){
-      
+      //checks the EU/non-EU question and adds score to countries with  selected membership
       if (eu == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -207,6 +209,7 @@ return list_score
    }
 
     function cheking_rate(list_score,rate,growth_rate_not_alp_neg,growth_rate_not_alp_pos){
+     // checks the growth rate question and adds score to countries with specified rate selected by user
       if (rate == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -224,6 +227,7 @@ return list_score
    }
 
    function cheking_pop(list_score,pop,pop_not_alp_10,pop_not_alp_140){
+     //checks the population question and adds score to countries with range of population selected by user
       if (pop == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -241,7 +245,7 @@ return list_score
    }
 
   let list_score = {}
- 
+ //Initialize list_score object to store the scores of the countries based on user options. If country setisfies user preference it gets a score
   let country_list_non_alp = []
   let density_alp = {}
   let density_alp_less_10k = {}
@@ -275,17 +279,20 @@ function getting_from_fb(density, eu, rate, pop ){
                   let c = 1
                   //console.log("key",key,"value",value)
                   for (let i of value){
-                    //if density is less than 300 push it in density_alp_less_10k, othervise in density_alp_more_10k
                     if(c === 4){
+                    //push all densities in to one dictionary  with countries as keys
+
                       density_alp[key] = i
-                          if (i<300){density_alp_less_10k[key]=i}else{density_alp_more_10k[key]=i}
+               //if density is less than 300 push it in density_alp_less_10k, othervise in density_alp_more_10k
+
+                     if (i<300){density_alp_less_10k[key]=i}else{density_alp_more_10k[key]=i}
 
                     }
                       c ++
                 }
               }
             //     console.log("density_alp_less_10k",density_alp_less_10k)
-            //                     console.log("density_alp_more_10k",density_alp_more_10k)
+            // console.log("density_alp_more_10k",density_alp_more_10k)
 
             //    console.log("density_alp", density_alp);
               }
@@ -320,10 +327,12 @@ function getting_from_fb(density, eu, rate, pop ){
                 // console.log("country_list_non_alp",country_list_non_alp)
                 country_list_non_alp.forEach((country, index) => {
             
-           
+           //push all growth rates in to one dictionary  with countries as keys
                 growth_rate_not_alp[country] = growth_rate_not_alp_temp[index];
 
                 if (growth_rate_not_alp_temp[index] > 0) {
+             //if rate is positive push it in growth_rate_not_alp_pos, otherwise in growth_rate_not_alp_neg
+
                     growth_rate_not_alp_pos[country] = growth_rate_not_alp_temp[index];
                 } else {
                     growth_rate_not_alp_neg[country] = growth_rate_not_alp_temp[index];
@@ -341,9 +350,16 @@ function getting_from_fb(density, eu, rate, pop ){
                 const data = snapshot.val();
                 let pop_not_alp_temp = Object.values(data);
                 //console.log("pop_not_alp", pop_not_alp);
+
+                //push all populations in to one dictionary, with countries as keys
+
                 country_list_non_alp.forEach((country, index) => {
                     pop_not_alp[country] = pop_not_alp_temp[index];
+                    //set all countries as keys in list_score
                     list_score[country] = 0
+
+
+                 //if population is less than 10000000 push it in pop_not_alp_10, otherwise in pop_not_alp_140
 
                     if (pop_not_alp_temp[index] < 10000000) {
                     pop_not_alp_10[country] = pop_not_alp_temp[index];
@@ -364,6 +380,9 @@ list_score = cheking_rate(list_score,rate,growth_rate_not_alp_neg,growth_rate_no
 list_score = cheking_pop(list_score,pop,pop_not_alp_10,pop_not_alp_140)
 
 //console.log(list_score)
+
+
+//Convert list_score to a list and sort it in descending order based on the scores
 let topCountries = Object.entries(list_score)
     .sort((a, b) => b[1] - a[1]) // sort in descending order
     .slice(0, 10);
@@ -375,6 +394,7 @@ document.getElementById("scoreContainer").innerHTML = "";  //if form submited mu
         topCountries.forEach(([country, score], index) => {
             const div = document.createElement("div");
             div.classList.add("country");
+            //Show a list of new recommended countries based on user preferences
             div.innerHTML =
            
              `
@@ -384,28 +404,29 @@ document.getElementById("scoreContainer").innerHTML = "";  //if form submited mu
             `;
             container.appendChild(div);
         });
-// topCountries.forEach(([country, score]) => {
-//     console.log(`${country}: ${score}`);
-// });
 
-            })//get
+
+
+            })//get closing
 })})})})})
 }
     </script>
     <style>
+      /* fonts */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         font-family: "Inter", sans-serif;
       }
+
       p {
   font-size: 18px;
   font-weight: bold;
   margin-bottom: 10px;
   margin-left: 20px;
 }
-
+  /* result design */
 .container {
   font-size: 16px;
   padding: 10px;
@@ -416,6 +437,7 @@ margin-left: 20px;
 .container div {
   padding: 5px 0;
 }
+ /* heading design */
        h2 {
         font-size: 24px;
         color: #333;
@@ -424,6 +446,7 @@ margin-left: 20px;
         margin-top: 10px;
       }
       .formbold-form-wrapper {
+         /* box around questions */
         max-width: 500px;
         margin: 20px auto;
         background: white;
@@ -435,6 +458,7 @@ margin-left: 20px;
       }
       .formbold-form-input,
       .formbold-form-select {
+         /* select dropdown */
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -444,6 +468,7 @@ margin-left: 20px;
         margin-bottom: 20px;
       }
       .formbold-btn {
+         /* button */
         width: 100%;
         padding: 12px;
         border: none;
@@ -453,6 +478,7 @@ margin-left: 20px;
         font-size: 16px;
       }
       .formbold-btn:hover {
+         /* when the user hovers their mouse pointer on the button */
         background-color: #18601c;
       }
     </style>
