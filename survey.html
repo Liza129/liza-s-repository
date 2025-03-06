@@ -10,11 +10,15 @@
     <br />
     <br />
     <h2>Please complete survey below</h2>
+    <!-- Create a form and  dropdown options for user to select answers -->
     <div class="formbold-main-wrapper">
       <div class="formbold-form-wrapper">
         <form id="form">
           <div class="formbold-input-group">
             <label for="name" class="formbold-form-label">Name</label>
+            <!-- Give an id to each option for the further use -->
+
+            <!-- string input -->
             <input
               type="text"
               name="name"
@@ -26,6 +30,7 @@
 
           <div class="formbold-input-group">
             <label for="age" class="formbold-form-label">Age</label>
+            <!-- integer input -->
             <input
               type="int"
               name="age"
@@ -39,7 +44,7 @@
             <label class="formbold-form-label">
               Which option best describes you?
             </label>
-
+            <!-- option -->
             <select
               class="formbold-form-select"
               name="occupation"
@@ -56,7 +61,7 @@
             <label for="ans" class="formbold-form-label">
               Do you live in the EU?
             </label>
-
+            <!-- boolean input -->
             <div class="formbold-radio-flex">
               <div class="formbold-radio-group">
                 <label class="formbold-radio-label">
@@ -90,6 +95,7 @@
             <label for="message" class="formbold-form-label">
               Any comments or suggestions
             </label>
+            <!-- string input -->
             <textarea
               rows="6"
               name="message"
@@ -98,13 +104,14 @@
               class="formbold-form-input"
             ></textarea>
           </div>
-
+          <!-- submit button, when all questions are answered -->
           <button class="formbold-btn">Submit</button>
         </form>
       </div>
     </div>
     <h2>Results out of all users serveyed</h2>
     <div id="results">
+      <!-- show output to user -->
       <p>
         Average Age:
         <span id="average-age"></span>
@@ -132,7 +139,7 @@
         <span id="non-eu-percentage"></span>
       </p>
     </div>
-
+    <!-- firebase details -->
     <script type="module">
       const firebaseConfig = {
         apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
@@ -162,10 +169,12 @@
       const firebaseRef = ref(database)
 
       function Updatingdatabase() {
+        //sends user data to firebase
         let newRecord = {}
         let name = document.getElementById('name')
         let selectedRadio = document.querySelector('input[name="ans"]:checked')
 
+        //convert each input into correct type
         if (selectedRadio) {
           newRecord['eu'] = selectedRadio.value === 'true'
         } else {
@@ -174,13 +183,16 @@
         let age = document.getElementById('age')
         let option = document.getElementById('occupation')
         let comment = document.getElementById('message')
+        //if nothing was entered set value to null, so it won't be included in the calculations and prevent errors
         newRecord['name'] = name.value.trim() ? name.value : null //if ?, :else
         newRecord['age'] = parseInt(age.value, 10) || null
         newRecord['option'] = option.value.trim() ? option.value : null //trim = strip in python
-        newRecord['comment'] = comment.value.trim() ? comment.value : null
+        newRecord['comment'] = comment.value.trim() ? comment.value : null //trim value to avoid whitespaces
 
         push(ref(database, '/User'), newRecord)
       }
+
+      //event listener which calls the Updatingdatabase() when submit button is pressed
       let formsubmission = document.getElementById('form')
       formsubmission.addEventListener('submit', Updatingdatabase)
 
@@ -190,6 +202,7 @@
       const eu_l = []
       const option_l = []
 
+      //Get data of all the users and store it in variables
       get(child(firebaseRef, '/'))
         .then((snapshot) => {
           if (snapshot.exists()) {
@@ -199,7 +212,7 @@
                 for (let userKey in value) {
                   let userData = value[userKey]
 
-                  name_l.push(userData.name || null)
+                  name_l.push(userData.name || null) //if there is no value, push null to prevent errors
                   age_l.push(userData.age || null)
                   comment_l.push(userData.comment || null)
                   eu_l.push(userData.eu !== undefined ? userData.eu : null)
@@ -224,6 +237,7 @@
             const euPercentage = calculateEuPercentage(eu_l)
             const nonEuPercentage = calculateEuPercentage(eu_l, false)
 
+            //round up values to zero decimals and add percentage sign
             document.getElementById(
               'average-age',
             ).textContent = averageAge.toFixed(0)
@@ -245,6 +259,7 @@
         })
 
       function calculateAverageAge(ages) {
+        //calculates the avarage age of all users
         if (ages.length === 0) {
           return 0
         }
@@ -269,6 +284,7 @@
       }
 
       function calculatecategPercentage(options, categ) {
+        //calculates the percentage of users who chose options: Student, Pre-school or Employed
         if (options.length === 0) {
           return 0
         }
@@ -289,6 +305,7 @@
       }
 
       function calculateEuPercentage(eu_l, isEu = true) {
+        //calculates the the percentage of users who chose options: EU or Non EU
         if (eu_l.length === 0) {
           return 0
         }
@@ -311,20 +328,21 @@
     </script>
 
     <style>
+      /*add simple design*/
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         font-family: 'Inter', sans-serif;
       }
-
+      /* heading design */
       h2 {
         font-size: 24px;
         color: #333;
         text-align: center;
         margin-bottom: 15px;
       }
-
+      /* result box design */
       #results {
         max-width: 500px;
         margin: 20px auto;
@@ -345,21 +363,24 @@
       #results p span {
         font-weight: bold;
         color: #254475;
+        /* show calculated values in blue */
       }
 
       .formbold-form-wrapper {
+        /* box around questions */
         max-width: 500px;
         margin: 20px auto;
         background: white;
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+        box-shadow: 0 2px 8px blue;
         margin-bottom: 20px;
         margin-top: 20px;
       }
 
       .formbold-form-input,
       .formbold-form-select {
+        /* select dropdown */
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
@@ -376,6 +397,7 @@
         margin-top: 20px;
       }
       .formbold-btn {
+        /* button */
         width: 100%;
         padding: 12px;
         border: none;
@@ -384,7 +406,7 @@
         color: white;
         font-size: 16px;
       }
-
+      /* when the user hovers their mouse pointer on the button */
       .formbold-btn:hover {
         background-color: #18601c;
       }

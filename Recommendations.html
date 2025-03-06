@@ -11,6 +11,7 @@
     <br />
     <h2>Recommendations</h2>
     <div class="formbold-main-wrapper">
+      <!-- Create a form and  dropdown options for user to select options. -->
       <div class="formbold-form-wrapper">
         <form id="form">
 
@@ -18,7 +19,7 @@
             <label class="formbold-form-label">
              What is your desired range of density per square km?
             </label>
-
+<!-- Give an id to each option for the further use -->
             <select
               class="formbold-form-select"
               name="density"
@@ -83,7 +84,7 @@
           </div>
 
            </div>
-
+<!-- submit button -->
           <button class="formbold-btn">Submit</button>
         </form>
       </div>
@@ -92,6 +93,7 @@
 <br>
      
      <h2>Results</h2>
+     <!-- Create a container to store the response for user. 10 recomended countries to live will be shown based on user preferences -->
      <br><br>
           <p>
         Recommended countries based on your choice:
@@ -106,7 +108,7 @@
     </div>
     <script type="module">
 
-
+// firebase details
 const firebaseConfig = {
         apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
         authDomain: "project-cb978.firebaseapp.com",
@@ -138,6 +140,7 @@ const firebaseConfig = {
 
 
        function gettingrecommendations(event) {
+         //stores the options selected by the user and passes them as arguments into getting_from_fb() 
        
           event.preventDefault(); 
 
@@ -156,6 +159,9 @@ const firebaseConfig = {
     //return { density_alp, eu, rate, pop };
   }
 
+
+
+//Add an event listener which calls the gettingrecommendations() when submit button is pressed
   let formsubmission = document.getElementById('form');
   formsubmission.addEventListener('submit', gettingrecommendations);
 
@@ -250,7 +256,9 @@ let growth_rate_not_alp_pos = {}
     let pop_not_alp_140 = {}
 
 function getting_from_fb(density, eu, rate, pop ){
+  //fetches data from firebase, to establish calculations based on it
   get(child(firebaseRef, "/Country_list")).then((snapshot) => {
+    //get country_list
               if (snapshot.exists()) {
                 const data = snapshot.val();
                 country_list_non_alp = Object.values(data);
@@ -259,6 +267,7 @@ function getting_from_fb(density, eu, rate, pop ){
 
 
  get(child(firebaseRef, "/Country_density")).then((snapshot) => {
+  //  get densities of all countries
               if (snapshot.exists()) {
                 const data = snapshot.val();
                 
@@ -266,6 +275,7 @@ function getting_from_fb(density, eu, rate, pop ){
                   let c = 1
                   //console.log("key",key,"value",value)
                   for (let i of value){
+                    //if density is less than 300 push it in density_alp_less_10k, othervise in density_alp_more_10k
                     if(c === 4){
                       density_alp[key] = i
                           if (i<300){density_alp_less_10k[key]=i}else{density_alp_more_10k[key]=i}
@@ -282,6 +292,7 @@ function getting_from_fb(density, eu, rate, pop ){
 
 
  get(child(firebaseRef, "/EU_c")).then((snapshot) => {
+   //get list of eu countries
               if (snapshot.exists()) {
                 const data = snapshot.val();
                 eu_c = Object.values(data);
@@ -290,6 +301,8 @@ function getting_from_fb(density, eu, rate, pop ){
 
 
   get(child(firebaseRef, "/NonEU_c")).then((snapshot) => {
+       //get list of eu countries
+
               if (snapshot.exists()) {
                 const data = snapshot.val();
                 non_eu_c = Object.values(data);
@@ -298,6 +311,8 @@ function getting_from_fb(density, eu, rate, pop ){
 
 
  get(child(firebaseRef, "/growthRate")).then((snapshot) => {
+      //get list of growth rate
+
               if (snapshot.exists()) {
                 const data = snapshot.val();
                 let growth_rate_not_alp_temp = Object.values(data);
@@ -361,9 +376,9 @@ document.getElementById("scoreContainer").innerHTML = "";  //if form submited mu
             const div = document.createElement("div");
             div.classList.add("country");
             div.innerHTML =
-            //<span class="rank">#${index + 1}</span> 
+           
              `
-                
+                 <span class="rank">#${index + 1}</span> 
                 <span class="name">${country}</span> 
                 <span class="score">(${score})</span>
             `;

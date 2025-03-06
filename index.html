@@ -8,6 +8,7 @@
   </head>
 
   <body>
+    <!-- create navigation for Survey and Recommendations page -->
     <nav>
       <a href="./survey.html" target="_blank">Survey</a>
       <a href="./Recommendations.html" target="_blank">Recommendations</a>
@@ -16,6 +17,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <!--Chart1-->
     <label for="countries">Choose a country to show its density:</label>
+    <!-- create a filter to show individual countries' density -->
     <select id="selectElementId">
       <option value="all">All Countries</option>
     </select>
@@ -23,6 +25,7 @@
     <canvas id="myChart" style="width: 100%; max-width: 700px;"></canvas>
 
     <!--Chart2-->
+    <!-- create Checkboxes to show EU/non-EU only variation -->
     <label for="stndev">
       Tick checkboxs to show variation in population sizes between the folowing:
     </label>
@@ -50,6 +53,7 @@
     <br />
     <canvas id="myChart3" style="width: 100%; max-width: 700px;"></canvas>
 
+    <!-- firebase details -->
     <script type="module">
       const firebaseConfig = {
         apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
@@ -83,17 +87,19 @@
       let myChart = null
 
       function addDataToChart() {
+        //gets points for density from firebase and triggers other functions
         let x_axis_density = []
         let y_axis_density = []
 
         let Country_list = []
 
-        get(child(firebaseRef, '/'))
+        get(child(firebaseRef, '/')) //Request data from Firebase
           .then((snapshot) => {
             if (snapshot.exists()) {
               const data = snapshot.val()
 
               for (let [key, value] of Object.entries(data)) {
+                //Go through the fetched data to get x_axis_density and y_axis_density, co-ordinates for default chart 1
                 if (key === 'Graph1_density') {
                   for (let [subKey, subValue] of Object.entries(value)) {
                     if (subKey === 'x_axis_density') {
@@ -103,6 +109,7 @@
                     }
                   }
                 } else if (key === 'Country_list') {
+                  // Go through the fetched data to get list of all countries
                   Country_list = value //list of all countries for filter
                 }
               }
@@ -120,6 +127,7 @@
 
       addDataToChart()
 
+      //function adds options to dropdown menu and handles changes in the selection (event listener)
       function Test(Country_list, x_axis_density) {
         let select = document.getElementById('selectElementId')
 
@@ -138,18 +146,20 @@
         })
       }
 
+      //which destroys the existing chart, determines which country's density to show, initiates a new chart based on user choice using Chart.js
       function updateChart(x_axis_density, y_axis_density) {
         if (myChart) {
-          myChart.destroy()
+          myChart.destroy() //destroys the existing chart
         }
 
-        let lable_chart1 = null
+        let lable_chart1 = null //labels to show on chart
         if (selectedCountry === 'all') {
+          //determines which country's density to show
           lable_chart1 = 'Density of the world'
         } else {
           lable_chart1 = `Density of ${selectedCountry}`
         }
-
+        // initiates a new chart based on user choice
         myChart = new Chart('myChart', {
           type: 'line',
           data: {
@@ -197,11 +207,15 @@
       //CHART 2 BAR
       let myChart2 = null
       let x_axis_stn_dev = []
-      let x_axis_stn_dev = []
+      let y_axis_stn_dev = []
       let y_eu = []
       let y_noneu = []
       function gettingChart2() {
+        //gets points for standard deviation from firebase and triggers other functions
+
         get(child(firebaseRef, '/')).then((snapshot) => {
+          //gets points for standard deviation from firebase and triggers other functions
+
           if (snapshot.exists()) {
             const data = snapshot.val()
 
@@ -216,7 +230,7 @@
                 }
               }
             }
-
+            // Go through the fetched data to get y_noneu and y_eu for the updated chart
             get(child(firebaseRef, '/Graph2_stn_dev/y_eu')).then((snapshot) => {
               if (snapshot.exists()) {
                 const data = snapshot.val()
@@ -243,12 +257,15 @@
       const Checkboxes = document.querySelectorAll('.color-checkbox')
 
       function updateChart2() {
-        const colorChecked = Array.from(Checkboxes)
+        //gets user choice (event listener), sets new datasets to be used in the new chart, destroys old chart and initiates a new chart based on user choice using Chart.js
+
+        const colorChecked = Array.from(Checkboxes) //store user choice
           .filter((checkbox) => checkbox.checked)
           .map((checkbox) => checkbox.value)
         //console.log(colorChecked);
 
         let newDatasets = [
+          //datasets to show bars on the chart
           {
             label: 'Overall Variation',
             data: y_axis_stn_dev,
@@ -264,6 +281,7 @@
         ]
 
         if (colorChecked.includes('eu')) {
+          //if EU was selected append to the datasets
           newDatasets.push({
             label: 'EU Variation',
             data: y_eu,
@@ -279,6 +297,7 @@
         }
 
         if (colorChecked.includes('noneu')) {
+          //if non_EU was selected append to the datasets
           newDatasets.push({
             label: 'Non EU Variation',
             data: y_noneu,
@@ -294,6 +313,7 @@
         }
 
         if (myChart2) {
+          //updates chart
           myChart2.data.datasets = newDatasets
           myChart2.update()
         } else {
@@ -314,7 +334,7 @@
           })
         }
       }
-
+      //check for changes
       document.querySelectorAll('.color-checkbox').forEach((checkbox) => {
         checkbox.addEventListener('change', updateChart2)
       })
@@ -326,6 +346,9 @@
       const barColors = ['#b91d47', '#00aba9', '#2b5797', '#e8c3b9', '#1e7145']
 
       function gettingChart3() {
+        //gets points for relation between an initial increase from current population to predicted population
+
+        // Go through the fetched data  to get co-ordinates for  default chart 3
         get(child(firebaseRef, '/Graph3_pred/x_axis_pred')).then((snapshot) => {
           if (snapshot.exists()) {
             const data = snapshot.val()
@@ -347,6 +370,7 @@
               //   y_axis_chart3,
               // )
 
+              //Initiate a new chart using Chart.js
               new Chart('myChart3', {
                 type: 'pie',
                 data: {
