@@ -9,58 +9,61 @@ from firebase_admin import db
 cred = credentials.Certificate("project-cb978-firebase-adminsdk-o6ddb-e3a40dcfc5.json")
 firebase_admin.initialize_app(cred, {'databaseURL':'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app/'})
 
+#Cleaning 
+
+#drop unused columns
 df = df.drop(columns = ["place","pop2030", "pop2050","area", "cca2","cca3","netChange","unMember","worldPercentage","density","densityMi"])
-
-#df = df.fillna(0)# The colums where the values are missing are filled them with 0 === apply only to numeric columns
-
+#drop duplicate rows
 df.drop_duplicates(subset=['country'], inplace=True)
-
-df = df.drop_duplicates(subset='rank', keep='first')#
-
-#already have it as astype()df["pop1980","pop2000","pop2010", "pop2023", "pop2024", "landAreaKm","growthRate"] = pd.to_numeric(df["pop1980","pop2000","pop2010", "pop2023", "pop2024", "landAreaKm","growthRate"], errors='coerce')
-
-df.dropna(how='all', inplace=True)#
-
-df = df[df != 'invalid_value']#
-
-df = df.astype({"pop1980":int, "pop2000":int,"pop2010":int, "pop2023":int, "pop2024":int,"landAreaKm":float, "country":str,"growthRate":float,"rank":int})
-
-df = df.round({"pop1980":0, "pop2000":0,"pop2010":0, "pop2023":0, "pop2024":0,"landAreaKm":2})
-
-#strings and numbers check types
-#check for empty values
+df = df.drop_duplicates(subset='rank', keep='first')
+#drop when all values are missing
+df.dropna(how='all', inplace=True)
+#remove rows with invalid values
+df = df[df != 'invalid_value']
 #rename columns
-#check columns are correctly spelled
-#remove non alpabetic chacacters 
+df.rename(columns={'landAreaKm': 'land_area',"growthRate":"growth_rate"}, inplace=True)
+#convert column values to specific types
+df = df.astype({"pop1980":int, "pop2000":int,"pop2010":int, "pop2023":int, "pop2024":int,"land_area":float, "country":str,"growth_rate":float,"rank":int})
+#round coulumns
+df = df.round({"pop1980":0, "pop2000":0,"pop2010":0, "pop2023":0, "pop2024":0,"land_area":2})
+#reorder columns
+df = df[['pop1980', 'pop2000', 'pop2010',"pop2023","pop2024","rank","growth_rate","land_area","country"]]
+#detect and count missing values
+missing_counts = df.isna().sum()
+#print(missing_counts)
+#check types
+#print(df.dtypes)
+
+
 obj = {}
 """
+All keys:
 pop1980
 pop2000
 pop2010
 pop2023
 pop2024
-country
-landAreaKm
-//unMember
-growthRate
 rank
+growth_rate
+land_area
+country
 """
-#{'india':[pop1980,pop2000],'...'}
-#df.dtypes check for types
+
+#store dataset in the dictionary
 for column in df.columns:
     obj[column] = list(df[column])
-#create a list with all countries
+#create a list with all countries to send to firebase
 countries_to_js = obj["country"]
 
-
+#list with keys in which population is stored
 l_col_names = []#['pop1980', 'pop2000', 'pop2010', 'pop2023', 'pop2024']
 c = 1
 for i in obj:
     if c <= 5:
         l_col_names.append(i)
     c += 1
-#print(max(obj["pop2024"]))
-#create 2 other identical objects yo obj, one of which has only EU countries and the other will have only nonEU  
+
+#create 2 other identical objects to obj, one of which has only EU countries and the other will have only nonEU  
 obj_EU = copy.deepcopy(obj)
 obj_NotEU = copy.deepcopy(obj)
 eu = ["Austria","Belgium","Bulgaria","Croatia","Cyprus","Czech Republic","Denmark","Estonia","Finland","France","Germany","Greece","Hungary","Ireland","Italy","Latvia","Lithuania","Luxembourg","Malta","Netherlands","Poland","Portugal","Romania","Slovakia","Slovenia","Spain","Sweden"]
@@ -69,12 +72,13 @@ not_eu = []
 for i in obj["country"]:
     if i not in eu:
       not_eu.append(i)  
-growthRate = obj["growthRate"]
+growth_rate = obj["growth_rate"]
 pop2024 = obj["pop2024"]
 
 
 c = 0
-
+#create dictionaries for EU and non-EU to store population for eu/non_eu countries only
+#same layout as in obj, but store only population
 EUIndexes = []
 NonEUIndexes = []
 for i in obj["country"]:
@@ -102,88 +106,75 @@ for key in obj_EU:
 #Total land area
 def tot_land_F(obj):
     sum_land = 0
-    for i in obj["landAreaKm"]:
+    for i in obj["land_area"]:#add up each countries land area
         sum_land += i
     return sum_land#130364272.63999997
 
 
-
-def ave_tot_pop_F(obj,i):#function for total and average population
+#Average/mean and total population
+def ave_tot_pop_F(obj,i):
     sum_pop = 0
-    for x in obj[i]:
+    for x in obj[i]:#go through population in given year and add it up
         sum_pop += x
-    ave_pop = sum_pop/obj["rank"][-1]
+    ave_pop = sum_pop/obj["rank"][-1]#divide by the number of countries to get mean
     return ave_pop,sum_pop
 
+#function to calculate density using formula
 def formula_den_F(year_p,land):
     density = year_p/land
     return density
 
-#transfer to the end
-def predicting_pop_F(obj):
-    k, p0 = ave_tot_pop_F(obj,"pop2024")#assuming initial population is in 2024 => P0
-    t = [5,10,30,50]#list of the timeframe for which I'm predicting population
-    rate,k = ave_tot_pop_F(obj,"growthRate")#getting average growth rate of the world
-    l_predicted_y = []#list of predicted population
-    for i in t:
-        c = p0*math.exp(rate*i)#formula for prediction
-        c = int(c)
-        l_predicted_y.append(c)
-    l_percentage_x1 = []
-    for i in l_predicted_y:
-        j = ((i-p0)/p0)*100
-        j = int(j)
-        j = str(j) + "%"
-        l_percentage_x1.append(j)
-    years = [2030,2025,2055,2075]
-    c = 0
-    l_percentage_x = []
-    for i in l_percentage_x1:
-        i = str(i)+" in "+str(years[c])
-        l_percentage_x.append(i)
-        c +=1
-        
-    return l_percentage_x,l_predicted_y,years
-l_percentage_x,l_predicted_y,years = predicting_pop_F(obj)
-#print("predicted", l_percentage_x,l_predicted_y)
 
         
-
+#function to calculate density of each country individually
 def density_of_each_country_points(l_col_names,obj):
     density_of_each_c_obj = {}
     c = 0
     
     for x in obj["country"]:
         for i in l_col_names:
-            year_p = obj[i][c]
-            land = obj["landAreaKm"][c]
-            density = formula_den_F(year_p,land)
-            if i in density_of_each_c_obj:
+            year_p = obj[i][c]#get population of a specific country in a specific year
+            land = obj["land_area"][c]#get land area of that country
+            density = formula_den_F(year_p,land)#calculate density
+            
+            #layout of the dictionary
+            #density_of_each_c_obj[India] = ["density in year1","density in year2","density in year3","density in year4","density in year5"]
+            
+            if i in density_of_each_c_obj:#if country is already in density_of_each_c_obj append to the end of the list
                 density_of_each_c_obj[i] += [density]
             else:
-                density_of_each_c_obj[i] = []
+                density_of_each_c_obj[i] = []#if not, create an empty list and add density to it
                 density_of_each_c_obj[i] += [density]
         c += 1
-        #print(x,density_of_each_c_obj['pop1980'])
         
     return density_of_each_c_obj
 
 density_of_each_c_obj = density_of_each_country_points(l_col_names,obj)
 #print("not sorted",density_of_each_c_obj)
 
+
+
+
+
+
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+#function which sorts dictionary with all individuall countries, from least density to highest
 def sort_each_value_of_density_country_obj(density_of_each_c_obj):
     obj2 = {}#dictionary with from gratest to least densities
+    
     for key,value in density_of_each_c_obj.items():
         value.sort()
-        #value = value[::-1]
         obj2[key] = value
     return obj2
 sorted_density_of_each_c_obj = sort_each_value_of_density_country_obj(copy.deepcopy(density_of_each_c_obj))
 #print("sorted",sorted_density_of_each_c_obj)
-## create a dictionary with key as a country and value[#,#,#,#,#] which shows density in each year + add show top 1,top2,top3 and least 1
-    #by default show all top 1,top2,top3
-    
-#DOESNOT WORKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA    
+
+
+
+#function to create a dictionary with key as a country and value[#,#,#,#,#] which shows density in each year
 def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj):  
     obj_firebase_density_countries = {}
     
@@ -192,13 +183,13 @@ def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_
             try:
                 indexPosition = density_of_each_c_obj["pop1980"].index(i)
                 if obj["country"][indexPosition] not in obj_firebase_density_countries:
-                    obj_firebase_density_countries[obj["country"][indexPosition]]=[]#{'density':[]}
+                    obj_firebase_density_countries[obj["country"][indexPosition]]=[]
                     for everyYear in l_col_names:
                         
-                        obj_firebase_density_countries[obj["country"][indexPosition]]+=[density_of_each_c_obj[everyYear][indexPosition] ]#['density'].append(density_of_each_c_obj[everyYear][indexPosition])
+                        obj_firebase_density_countries[obj["country"][indexPosition]]+=[density_of_each_c_obj[everyYear][indexPosition] ]
                 
             except:
-                #print('Unable to find value at position: ',i)
+                print('Unable to find value at position: ',i)
                 break
         break
                  
@@ -286,7 +277,39 @@ for x in y_axis_stn_d:
     x = round(x,1)
     y_axis_stn_d_round.append(x)
 
+#Chart 3 predicted population
+def predicting_pop_F(obj):
+    k, p0 = ave_tot_pop_F(obj,"pop2024")#assuming initial population is in 2024 => P0
+    t = [5,10,30,50]#list of the timeframe for which I'm predicting population
+    rate,k = ave_tot_pop_F(obj,"growth_rate")#getting average growth rate of the world
+    l_predicted_y = []#list of predicted population
+    for i in t:
+        c = p0*math.exp(rate*i)#formula for prediction
+        c = int(c)
+        l_predicted_y.append(c)
+    l_percentage_x1 = []
+    for i in l_predicted_y:
+        j = ((i-p0)/p0)*100
+        j = int(j)
+        j = str(j) + "% increase"
+        l_percentage_x1.append(j)
+    years = [2030,2025,2055,2075]
+    c = 0
+    l_percentage_x = []
+    for i in l_percentage_x1:
+        i = str(i)+" in "+str(years[c])
+        l_percentage_x.append(i)
+        c +=1
+        
+    return l_percentage_x,l_predicted_y,years
+l_percentage_x,l_predicted_y,years = predicting_pop_F(obj)
+#print("predicted", l_percentage_x,l_predicted_y)
+
+
+
 #print("Density: \nx-axis: ",x_axis_d,"\ny-axis:",y_axis_d_round,"\nStandard deviation:","\nx-axis:",x_axis_stn_d,"\ny-axis:",y_axis_stn_d_round)
+
+
 
 #firebase
 fb_dictionary={
@@ -308,7 +331,7 @@ fb_dictionary={
     "Country_density":obj_firebase_density_countries,
     "EU_c":eu,
     "NonEU_c":not_eu,
-    "growthRate":growthRate,
+    "growth_rate":growth_rate,
     "pop2024":pop2024
     }
 
@@ -348,9 +371,9 @@ for i in years:
     i = str(i)
     years2.append(i)
     
-#print("years2",years2,"y_axis_d_round",y_axis_d_round,"list_n",list_n,"l_predicted_y",l_predicted_y)
+#print("years2",years2,"l_predicted_y",l_predicted_y,"l_percentage_x",l_percentage_x)
 fig, ax = plt.subplots()
-ax.pie(l_predicted_y, labels=years2,autopct='%1.1f%%')
+ax.pie(l_predicted_y, labels=l_percentage_x)
 plt.title('Predicted population')
 
 plt.show()
