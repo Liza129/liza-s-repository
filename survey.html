@@ -147,18 +147,18 @@
     <!-- firebase details -->
     <script type="module">
       const firebaseConfig = {
-        apiKey: "AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs",
-        authDomain: "project-cb978.firebaseapp.com",
+        apiKey: 'AIzaSyBo09pzOIuLbr44sJU087CeQvK21n60yHs',
+        authDomain: 'project-cb978.firebaseapp.com',
         databaseURL:
-          "https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app",
-        projectId: "project-cb978",
-        storageBucket: "project-cb978.firebasestorage.app",
-        messagingSenderId: "396597845049",
-        appId: "1:81524826446:web:596f420c323372555ebe1f",
-      };
+          'https://project-cb978-default-rtdb.europe-west1.firebasedatabase.app',
+        projectId: 'project-cb978',
+        storageBucket: 'project-cb978.firebasestorage.app',
+        messagingSenderId: '396597845049',
+        appId: '1:81524826446:web:596f420c323372555ebe1f',
+      }
 
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-      const app = initializeApp(firebaseConfig);
+      import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js'
+      const app = initializeApp(firebaseConfig)
       import {
         getDatabase,
         ref,
@@ -169,191 +169,194 @@
         query,
         orderByChild,
         push,
-      } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js";
-      const database = getDatabase();
-      const firebaseRef = ref(database);
+      } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-database.js'
+      const database = getDatabase()
+      const firebaseRef = ref(database)
 
       //Function for validation. It makes sure the input in age question is integer, otherwise displays error massege and does not send the form
       function myFunction(event) {
-        event.preventDefault();
+        event.preventDefault()
         // Get the value of the input field with id="age"
-        let x = document.getElementById("age").value;
+        let x = document.getElementById('age').value
         // If x is Not a Number
-        let text;
-        if (isNaN(x)) {
-          text = "Invalid input!! Enter a number!!";
-          document.getElementById("demo").innerHTML = text;
+        let text
+        if (isNaN(x) || x <= 0 || x > 250) {
+          text = 'Invalid input!!'
+          document.getElementById('demo').innerHTML = text
         } else {
-          text = "";
-          document.getElementById("demo").innerHTML = text;
+          text = ''
+          document.getElementById('demo').innerHTML = text
 
-          Updatingdatabase();
+          Updatingdatabase()
         }
       }
 
       function Updatingdatabase() {
         //sends user data to firebase
-        let newRecord = {};
-        let name = document.getElementById("name");
-        let selectedRadio = document.querySelector('input[name="ans"]:checked');
+        let newRecord = {}
+        let name = document.getElementById('name')
+        let selectedRadio = document.querySelector('input[name="ans"]:checked')
 
         //convert each input into correct type
         if (selectedRadio) {
-          newRecord["eu"] = selectedRadio.value === "true";
+          newRecord['eu'] = selectedRadio.value === 'true'
         } else {
-          newRecord["eu"] = null;
+          newRecord['eu'] = null
         }
-        let age = document.getElementById("age");
-        let option = document.getElementById("occupation");
-        let comment = document.getElementById("message");
+        let age = document.getElementById('age')
+        let option = document.getElementById('occupation')
+        let comment = document.getElementById('message')
         //if nothing was entered set value to null, so it won't be included in the calculations and prevent errors
-        newRecord["name"] = name.value.trim() ? name.value : null; //if ?, :else
-        newRecord["age"] = parseInt(age.value, 10) || null;
-        newRecord["option"] = option.value.trim() ? option.value : null; //trim = strip in python
-        newRecord["comment"] = comment.value.trim() ? comment.value : null; //trim value to avoid whitespaces
+        newRecord['name'] = name.value.trim() ? name.value : null //if ?, :else
+        newRecord['age'] = parseInt(age.value, 10) || null
+        newRecord['option'] = option.value.trim() ? option.value : null //trim = strip in python
+        newRecord['comment'] = comment.value.trim() ? comment.value : null //trim value to avoid whitespaces
 
-        push(ref(database, "/User"), newRecord);
-        getting_from_firebase();
+        push(ref(database, '/User'), newRecord)
+        getting_from_firebase()
       }
 
       //event listener which calls myFunction which callas the Updatingdatabase() when submit button is pressed
-      let formsubmission = document.getElementById("form");
-      formsubmission.addEventListener("submit", myFunction);
+      let formsubmission = document.getElementById('form')
+      formsubmission.addEventListener('submit', myFunction)
 
-      const name_l = [];
-      const age_l = [];
-      const comment_l = [];
-      const eu_l = [];
-      const option_l = [];
+      const name_l = []
+      const age_l = []
+      const comment_l = []
+      const eu_l = []
+      const option_l = []
       function getting_from_firebase() {
         //Get data of all the users and store it in variables
-        get(child(firebaseRef, "/"))
+        get(child(firebaseRef, '/'))
           .then((snapshot) => {
             if (snapshot.exists()) {
-              const data = snapshot.val();
+              const data = snapshot.val()
               for (let [key, value] of Object.entries(data)) {
-                if (key === "User") {
+                if (key === 'User') {
                   for (let userKey in value) {
-                    let userData = value[userKey];
+                    let userData = value[userKey]
 
-                    name_l.push(userData.name || null); //if there is no value, push null to prevent errors
-                    age_l.push(userData.age || null);
-                    comment_l.push(userData.comment || null);
-                    eu_l.push(userData.eu !== undefined ? userData.eu : null);
-                    option_l.push(userData.option || null);
+                    name_l.push(userData.name || null) //if there is no value, push null to prevent errors
+                    age_l.push(userData.age || null)
+                    comment_l.push(userData.comment || null)
+                    eu_l.push(userData.eu !== undefined ? userData.eu : null)
+                    option_l.push(userData.option || null)
                   }
                 }
               }
-              const averageAge = calculateAverageAge(age_l);
+              const averageAge = calculateAverageAge(age_l)
               const studentPercentage = calculatecategPercentage(
                 option_l,
-                "Student"
-              );
+                'Student',
+              )
               const preschoolPercentage = calculatecategPercentage(
                 option_l,
-                "Pre-school"
-              );
+                'Pre-school',
+              )
               const employedPercentage = calculatecategPercentage(
                 option_l,
-                "Employed"
-              );
+                'Employed',
+              )
 
-              const euPercentage = calculateEuPercentage(eu_l);
-              const nonEuPercentage = calculateEuPercentage(eu_l, false);
+              const euPercentage = calculateEuPercentage(eu_l)
+              const nonEuPercentage = calculateEuPercentage(eu_l, false)
 
               //round up values to zero decimals and add percentage sign
-              document.getElementById("average-age").textContent =
-                averageAge.toFixed(0);
-              document.getElementById("student-percentage").textContent =
-                studentPercentage.toFixed(0) + "%";
-              document.getElementById("preschool-percentage").textContent =
-                preschoolPercentage.toFixed(0) + "%";
-              document.getElementById("employed-percentage").textContent =
-                employedPercentage.toFixed(0) + "%";
+              document.getElementById(
+                'average-age',
+              ).textContent = averageAge.toFixed(0)
+              document.getElementById('student-percentage').textContent =
+                studentPercentage.toFixed(0) + '%'
+              document.getElementById('preschool-percentage').textContent =
+                preschoolPercentage.toFixed(0) + '%'
+              document.getElementById('employed-percentage').textContent =
+                employedPercentage.toFixed(0) + '%'
 
-              document.getElementById("eu-percentage").textContent =
-                euPercentage.toFixed(0) + "%";
-              document.getElementById("non-eu-percentage").textContent =
-                nonEuPercentage.toFixed(0) + "%";
+              document.getElementById('eu-percentage').textContent =
+                euPercentage.toFixed(0) + '%'
+              document.getElementById('non-eu-percentage').textContent =
+                nonEuPercentage.toFixed(0) + '%'
             }
           })
           .catch((error) => {
-            console.error("Error", error);
-          });
+            console.error('Error', error)
+          })
       }
       //call function first to show current statistics
-      getting_from_firebase();
+      getting_from_firebase()
       function calculateAverageAge(ages) {
         //calculates the avarage age of all users
         if (ages.length === 0) {
-          return 0;
+          return 0
         }
 
-        let filtered_ages = [];
+        let filtered_ages = []
         for (let i = 0; i < ages.length; i++) {
           if (ages[i] !== null && ages[i] !== undefined) {
-            filtered_ages.push(ages[i]);
+            filtered_ages.push(ages[i])
           }
         }
 
         if (filtered_ages.length === 0) {
-          return 0;
+          return 0
         }
 
-        let sum = 0;
+        let sum = 0
 
         for (let i = 0; i < filtered_ages.length; i++) {
-          sum = sum + filtered_ages[i];
+          sum = sum + filtered_ages[i]
         }
-        return sum / filtered_ages.length;
+        return sum / filtered_ages.length
       }
 
       function calculatecategPercentage(options, categ) {
         //calculates the percentage of users who chose options: Student, Pre-school or Employed
         if (options.length === 0) {
-          return 0;
+          return 0
         }
-        let filt_opt = [];
+        let filt_opt = []
         for (let i = 0; i < options.length; i++) {
           if (options[i] !== null && options[i] !== undefined) {
-            filt_opt.push(options[i]);
+            filt_opt.push(options[i])
           }
         }
 
-        let count = 0;
+        let count = 0
         for (let i = 0; i < filt_opt.length; i++) {
           if (filt_opt[i] === categ) {
-            count++;
+            count++
           }
         }
-        return (count / filt_opt.length) * 100;
+        return (count / filt_opt.length) * 100
       }
 
       function calculateEuPercentage(eu_l, isEu = true) {
         //calculates the the percentage of users who chose options: EU or Non EU
         if (eu_l.length == 0) {
-          return 0;
+          return 0
         }
 
-        let filteredEu = [];
+        let filteredEu = []
         for (let i = 0; i < eu_l.length; i++) {
           if (eu_l[i] !== null && eu_l[i] !== undefined) {
-            filteredEu.push(eu_l[i]);
+            console.log(eu_l[i])
+            filteredEu.push(eu_l[i])
           }
         }
 
-        let count = 0;
+        let count = 0
         for (let i = 0; i < filteredEu.length; i++) {
           if (filteredEu[i] === isEu) {
-            count++;
+            count++
           }
         }
 
-        let output = (count / filteredEu.length) * 100;
+        let output = (count / filteredEu.length) * 100
+
         if (isNaN(output)) {
-          return 0;
+          return 0
         } else {
-          return output;
+          return output
         }
       }
     </script>
@@ -364,7 +367,7 @@
         margin: 0;
         padding: 0;
         box-sizing: border-box;
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
       }
       /* heading design */
       h2 {
