@@ -176,7 +176,11 @@
         let x = document.getElementById('age').value
         // If x is Not a Number
         let text
-        if (isNaN(x) || x <= 0 || x > 250 || isFloat(x)) {
+        x = parseFloat(x)
+        if (isNaN(x) || x <= 0 || x > 250) {
+          text = 'Invalid input!! Enter a natural number less than 250!'
+          document.getElementById('demo').innerHTML = text
+        } else if (!Number.isInteger(x)) {
           text = 'Invalid input!! Enter a natural number less than 250!'
           document.getElementById('demo').innerHTML = text
         } else {
@@ -335,7 +339,7 @@
         let filteredEu = []
         for (let i = 0; i < eu_l.length; i++) {
           if (eu_l[i] !== null && eu_l[i] !== undefined) {
-            console.log(eu_l[i])
+            //console.log(eu_l[i])
             filteredEu.push(eu_l[i])
           }
         }
