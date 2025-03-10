@@ -180,8 +180,8 @@
         let x = document.getElementById('age').value
         // If x is Not a Number
         let text
-        if (isNaN(x) || x <= 0 || x > 250) {
-          text = 'Invalid input!!'
+        if (isNaN(x) || x <= 0 || x > 250 || isFloat(x)) {
+          text = 'Invalid input!! Enter a natural number less than 250!'
           document.getElementById('demo').innerHTML = text
         } else {
           text = ''
