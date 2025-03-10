@@ -155,7 +155,31 @@ def density_of_each_country_points(l_col_names,obj):
 density_of_each_c_obj = density_of_each_country_points(l_col_names,obj)
 #print("not sorted",density_of_each_c_obj)
 
+#function to create a dictionary with key as a country and value[#,#,#,#,#] which shows density in each year
+def country_density_points_F(obj, density_of_each_c_obj):  
+    obj_firebase_density_countries = {}
+    
+    #layout of the dictionary
+    #Example
+    #density_of_each_c_obj[India] = ["density in year1","density in year2","density in year3","density in year4","density in year5]
+    
+    #Add each country as a key
+    for i in obj["country"]:
+        obj_firebase_density_countries[i] = []
+    #Go through each value to map it into new dictionary
+    for key, value in density_of_each_c_obj.items():
+        c = 0 #Update counter fow each new interation of value
+        for i in obj_firebase_density_countries:
+            obj_firebase_density_countries[i].append(value[c]) #Append density into its corresponding key - country
+            c += 1
 
+    return obj_firebase_density_countries
+ 
+obj_firebase_density_countries = country_density_points_F(obj,density_of_each_c_obj)
+#print("our obj",obj_firebase_density_countries)
+
+
+"""
 #function which sorts dictionary with all individuall countries, from least density to highest
 def sort_each_value_of_density_country_obj(density_of_each_c_obj):
     obj2 = {}#dictionary with from gratest to least densities
@@ -170,38 +194,7 @@ def sort_each_value_of_density_country_obj(density_of_each_c_obj):
     return obj2
 sorted_density_of_each_c_obj = sort_each_value_of_density_country_obj(copy.deepcopy(density_of_each_c_obj))
 #print("sorted",sorted_density_of_each_c_obj)
-
-
-
-#function to create a dictionary with key as a country and value[#,#,#,#,#] which shows density in each year
-def country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj):  
-    obj_firebase_density_countries = {}
-    
-    #layout of the dictionary
-    #Example
-    #density_of_each_c_obj[India] = ["density in year1","density in year2","density in year3","density in year4","density in year5"]
-    #countries are arranged based on their density from lowest density to highest
-    #Greenland will come before India as it is not as dense
-    
-    for key,value in sorted_density_of_each_c_obj.items():
-        for i in value:
-            try:
-                #Find index position of country which corresonds to the density value in density_of_each_c_obj
-                indexPosition = density_of_each_c_obj["pop1980"].index(i)
-                if obj["country"][indexPosition] not in obj_firebase_density_countries: #if country is not in obj_firebase_density_countries create an empty list to store densities
-                    obj_firebase_density_countries[obj["country"][indexPosition]]=[]
-                    #Loop through all the year columns and add corresponding density to the dictionary
-                    for everyYear in l_col_names:
-                        obj_firebase_density_countries[obj["country"][indexPosition]]+=[density_of_each_c_obj[everyYear][indexPosition] ]
-                
-            except:
-                print('Unable to find value at position: ',i)
-                break
-        break#break to speed up process 
-                 
-    return obj_firebase_density_countries
-obj_firebase_density_countries = country_density_points_F(obj,sorted_density_of_each_c_obj,density_of_each_c_obj)
-#print("our obj",obj_firebase_density_countries)
+"""
 
 #function to calculate density of the world for default chart 1
 def points_density_F(l_col_names):
