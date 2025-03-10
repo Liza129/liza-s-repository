@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -11,18 +10,18 @@
         <br />
     <br />
     <h2>Recommendations</h2>
-    <div class="formbold-main-wrapper">
+    <div >
       <!-- Create a form and  dropdown options for user to select options. -->
-      <div class="formbold-form-wrapper">
+      <div class="form_wrapper">
         <form id="form">
 
-           <div class="formbold-input-group">
-            <label class="formbold-form-label">
+           <div >
+            <label >
              What is your desired range of density per square km?
             </label>
 <!-- Give an id to each option for the further use -->
             <select
-              class="formbold-form-select"
+              class="form_select "
               name="density"
               id="density"
             >
@@ -32,13 +31,13 @@
             </select>
           </div>
 
-          <div class="formbold-input-group">
-            <label class="formbold-form-label">
+          <div >
+            <label >
              Would you like it to be an EU country?
             </label>
 
             <select
-              class="formbold-form-select"
+              class="form_select "
               name="eu"
               id="eu"
             >
@@ -49,13 +48,13 @@
             </select>
           </div>
 
-           <div class="formbold-input-group">
-            <label class="formbold-form-label">
+           <div >
+            <label >
              What rate of growth would you like to have?
             </label>
 
             <select
-              class="formbold-form-select"
+              class="form_select "
               name="rate"
               id="rate"
             >
@@ -66,13 +65,13 @@
             </select>
           </div>
 
-          <div class="formbold-input-group">
-            <label class="formbold-form-label">
+          <div >
+            <label >
              What is your current desired level of population?
             </label>
 
             <select
-              class="formbold-form-select"
+              class="form_select "
               name="pop"
               id="pop"
             >
@@ -86,7 +85,7 @@
 
            </div>
 <!-- submit button -->
-          <button class="formbold-btn">Submit</button>
+          <button class="btn">Submit</button>
         </form>
       </div>
     </div>
@@ -446,7 +445,7 @@ margin-left: 20px;
         margin-bottom: 15px;
         margin-top: 10px;
       }
-      .formbold-form-wrapper {
+      .form_wrapper {
          /* box around questions */
         max-width: 500px;
         margin: 20px auto;
@@ -457,8 +456,8 @@ margin-left: 20px;
         margin-bottom: 20px;
         margin-top: 20px;
       }
-      .formbold-form-input,
-      .formbold-form-select {
+     
+      .form_select {
          /* select dropdown */
         width: 100%;
         padding: 10px;
@@ -468,7 +467,7 @@ margin-left: 20px;
         margin-top: 20px;
         margin-bottom: 20px;
       }
-      .formbold-btn {
+      .btn {
          /* button */
         width: 100%;
         padding: 12px;
@@ -478,7 +477,7 @@ margin-left: 20px;
         color: white;
         font-size: 16px;
       }
-      .formbold-btn:hover {
+      .btn:hover {
          /* when the user hovers their mouse pointer on the button */
         background-color: #18601c;
       }
