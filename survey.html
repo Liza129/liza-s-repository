@@ -11,11 +11,11 @@
     <br />
     <h2>Please complete survey below</h2>
     <!-- Create a form and  dropdown options for user to select answers -->
-    <div class="formbold-main-wrapper">
-      <div class="formbold-form-wrapper">
+    <div class="main">
+      <div class="form_class">
         <form id="form">
-          <div class="formbold-input-group">
-            <label for="name" class="formbold-form-label">Name</label>
+          <div class="input_class">
+            <label for="name" class="form_label">Name</label>
             <!-- Give an id to each option for the further use -->
 
             <!-- string input -->
@@ -24,19 +24,19 @@
               name="name"
               id="name"
               placeholder="Enter your name"
-              class="formbold-form-input"
+              class="form_input"
             />
           </div>
 
-          <div class="formbold-input-group">
-            <label for="age" class="formbold-form-label">Age</label>
+          <div class="input_class">
+            <label for="age" class="form_label">Age</label>
             <!-- integer input -->
             <input
               type="int"
               name="age"
               id="age"
               placeholder="Enter your age"
-              class="formbold-form-input"
+              class="form_input"
             />
             <p id="demo"></p>
 
@@ -45,16 +45,12 @@
             <br />
           </div>
 
-          <div class="formbold-input-group">
-            <label class="formbold-form-label">
+          <div class="input_class">
+            <label class="form_label">
               Which option best describes you?
             </label>
             <!-- option -->
-            <select
-              class="formbold-form-select"
-              name="occupation"
-              id="occupation"
-            >
+            <select class="form_select" name="occupation" id="occupation">
               <option value="Student">Student</option>
               <option value="Pre-school">Pre-school</option>
 
@@ -62,42 +58,42 @@
             </select>
           </div>
 
-          <div class="formbold-input-radio-wrapper">
-            <label for="ans" class="formbold-form-label">
+          <div class="input_radio">
+            <label for="ans" class="form_label">
               Do you live in the EU?
             </label>
             <!-- boolean input -->
-            <div class="formbold-radio-flex">
-              <div class="formbold-radio-group">
-                <label class="formbold-radio-label">
+            <div class="radio_flex">
+              <div class="radio_group">
+                <label class="radio_label">
                   <input
-                    class="formbold-input-radio"
+                    class="input_radio"
                     type="radio"
                     name="ans"
                     value="true"
                   />
                   Yes
-                  <span class="formbold-radio-checkmark"></span>
+                  <span class="radio_check"></span>
                 </label>
               </div>
 
-              <div class="formbold-radio-group">
-                <label class="formbold-radio-label">
+              <div class="radio_group">
+                <label class="radio_label">
                   <input
-                    class="formbold-input-radio"
+                    class="input_radio"
                     type="radio"
                     name="ans"
                     value="false"
                   />
                   No
-                  <span class="formbold-radio-checkmark"></span>
+                  <span class="radio_check"></span>
                 </label>
               </div>
             </div>
           </div>
 
           <div>
-            <label for="message" class="formbold-form-label">
+            <label for="message" class="form_label">
               Any comments or suggestions
             </label>
             <!-- string input -->
@@ -106,11 +102,11 @@
               name="message"
               id="message"
               placeholder="Type here..."
-              class="formbold-form-input"
+              class="form_input"
             ></textarea>
           </div>
           <!-- submit button, when all questions are answered -->
-          <button class="formbold-btn" id="button" type="submit">Submit</button>
+          <button class="btn" id="button" type="submit">Submit</button>
         </form>
       </div>
     </div>
@@ -400,7 +396,7 @@
         /* show calculated values in blue */
       }
 
-      .formbold-form-wrapper {
+      .form_class {
         /* box around questions */
         max-width: 500px;
         margin: 20px auto;
@@ -412,8 +408,8 @@
         margin-top: 20px;
       }
 
-      .formbold-form-input,
-      .formbold-form-select {
+      .form_input,
+      .form_select {
         /* select dropdown */
         width: 100%;
         padding: 10px;
@@ -423,14 +419,14 @@
         margin-top: 20px;
         margin-bottom: 20px;
       }
-      .formbold-radio-flex {
+      .radio_flex {
         display: flex;
         flex-direction: row;
         gap: 20px;
         margin-bottom: 20px;
         margin-top: 20px;
       }
-      .formbold-btn {
+      .btn {
         /* button */
         width: 100%;
         padding: 12px;
@@ -441,7 +437,7 @@
         font-size: 16px;
       }
       /* when the user hovers their mouse pointer on the button */
-      .formbold-btn:hover {
+      .btn:hover {
         background-color: #18601c;
       }
       /* text for invalid numbers */
