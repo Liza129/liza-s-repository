@@ -9,14 +9,20 @@
 
   <body>
     <!-- create navigation for Survey and Recommendations page -->
-    <nav>
-      <a href="./survey.html" target="_blank">Survey</a>
-      <a href="./Recommendations.html" target="_blank">Recommendations</a>
+    <nav class="nav">
+      <ul>
+        <li><a href="./survey.html" target="_blank">Survey</a></li>
+        <li>
+          <a href="./Recommendations.html" target="_blank">Recommendations</a>
+        </li>
+      </ul>
     </nav>
-
+    <h1>Population</h1>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
     <!--Chart1-->
-    <label for="countries">Choose a country to show its density:</label>
+    <img src="./PopulationDensityMapPerSquareKilometre.png" />
+    <p>The graph below shows density of the world over the years.</p>
+    <label for="countries">Select a country to show its density:</label>
     <!-- create a filter to show individual countries' density -->
     <select id="selectElementId">
       <option value="all">All Countries</option>
@@ -25,6 +31,7 @@
     <canvas id="myChart" style="width: 100%; max-width: 700px;"></canvas>
 
     <!--Chart2-->
+    <p>The graph below shows variation in population sizes across the world.</p>
     <!-- create Checkboxes to show EU/non-EU only variation -->
     <label for="stndev">
       Tick checkboxs to show variation in population sizes between the folowing:
@@ -51,6 +58,17 @@
     <!--Chart3-->
     <br />
     <br />
+    <img
+      src="./un-world-total-population-projections-2100-from-wp-report.png"
+      alt=""
+    />
+
+    <p>
+      The graph below shows predicted population over the years. Legend shows
+      the percenatge increse from initial population (2024).
+    </p>
+
+    <p>Click on coloured boxes to hide sertain sectors:</p>
     <canvas id="myChart3" style="width: 100%; max-width: 700px;"></canvas>
 
     <!-- firebase details -->
@@ -434,5 +452,39 @@
       }
       gettingChart3()
     </script>
+    <style>
+      .nav {
+        background-color: rgb(255, 163, 123);
+        border-width: 1px 0;
+        text-align: center;
+      }
+      .nav li {
+        display: inline;
+        margin-right: 10px;
+      }
+      .nav a {
+        display: inline-block;
+        padding: 10px;
+        color: #000;
+      }
+      .nav a:hover {
+        background-color: #f0f0f0;
+        color: #007bff;
+      }
+      p {
+        margin-left: 20px;
+      }
+      img {
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 100%;
+      }
+      h1 {
+        text-align: center;
+        color: #590808;
+        font-size: 60 px;
+      }
+    </style>
   </body>
 </html>
