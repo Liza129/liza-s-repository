@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plan and Design</title>
+  </head>
+  <body>
+    <nav class="nav">
+      <ul>
+        <li><a href="report.html">1. Meeting the brief</a></li>
+        <li><a href="./Investigation.html">2. Investigation</a></li>
+        <li><a href="./idea.html" target="_blank">Idea-flowchart</a></li>
+        <li>
+          <a href="./Plan_and_Design.html" target="_blank">3. Plan & Design</a>
+        </li>
+        <li><a href="wireframe.html" target="_blank">Wireframe</a></li>
+        <li><a href="arch.html">Architecture Diagram</a></li>
+        <li><a href="flowchart.html" target="_blank">Flowchart</a></li>
+        <li><a href="Create.html" target="_blank">4. Create</a></li>
+        <li><a href="Evaluation.html" target="_blank">5. Evaluation</a></li>
+      </ul>
+    </nav>
+    <style>
+      body {
+        background-color: bisque;
+      }
+      .next {
+        display: block;
+        text-align: right;
+        font-weight: bold;
+        margin-right: 60px;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 35px;
+      }
+      .nav {
+        background-color: rgb(239, 126, 126);
+        border-width: 1px 0;
+        text-align: center;
+      }
+      .nav li {
+        display: inline;
+      }
+      .nav a {
+        display: inline-block;
+        padding: 10px;
+        color: #000;
+      }
+      .nav a:hover {
+        background-color: #f0f0f0;
+        color: #007bff;
+      }
+      p,
+      ul,
+      ol,
+      img,
+      a,
+      li {
+        margin-left: 10px;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        vertical-align: top;
+      }
+      th {
+        background-color: #f5a5a5;
+      }
+      .italic {
+        font-style: italic;
+      }
+      .bold {
+        font-weight: bold;
+      }
+      table {
+        width: 90%;
+        border-collapse: collapse;
+        margin: 20px;
+        text-align: center;
+      }
+      .big {
+        font-size: 24px;
+      }
+      .tech {
+        text-align: center;
+      }
+      .role {
+        text-align: left;
+      }
+    </style>
+    <h1>Plan and Design</h1>
+    <h2>My proposed solution:</h2>
+    <ol>
+      <li>
+        Display three interactive charts for density, country size variation,
+        and world predicted population, <b>helping users</b> visualize global
+        data, track changes and impacts of population.
+      </li>
+      <br />
+      <li>
+        Update graphs based on filters: show country’s density, EU/non-EU size
+        variation, or predicted population for chosen years.
+      </li>
+      <br />
+      <li>
+        Store survey inputs in Firebase and display all users' statistics:
+        average age, EU/non-EU percentage, and other options percentage.
+        <br /><br />
+        This will <b>help user</b> to compare their choices with others and see
+        the statistics for general knowledge.
+      </li>
+      <br />
+      <li>
+        On the recommendations page, ask for users' preferences and suggest 10
+        countries based on information from dataset. <br /><br />
+        This will <b>help users</b> who are willing to travel or move to other
+        countries.
+      </li>
+    </ol>
+    <br />
+    <p>
+      I’ll use <b>Extreme Programming Agile Framework</b> approach because it
+      breaks large milestones into simple tasks. I’ll have continuous iterations
+      to improve design and functionality.
+    </p>
+    <h2>Wireframe</h2>
+    <a href="wireframe.html" target="_blank">Wireframe</a>
+    <br /><br /><br />
+    <table>
+      <tr>
+        <th class="big"><b>Basic requirements:</b></th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Collect and prepare data</td>
+        <td>
+          I’ll use dataset from World-population-review, save it to csv file,
+          clean it with pandas and store it in a dictionary.
+        </td>
+      </tr>
+      <tr>
+        <td>Data analytics and visualisation</td>
+        <td>
+          For my three graphs I’ll calculate density, standard deviation,
+          predict population and measure percentage increase. I’ll use
+          matplotlib to create line, bar and pie charts.
+        </td>
+      </tr>
+      <tr>
+        <td>Create interactive information system</td>
+        <td>
+          I’ll use JavaScript, HTML and CSS to create a website, and display 3
+          charts using Chart.js.
+        </td>
+      </tr>
+    </table>
+    <br /><br />
+    <table>
+      <tr>
+        <th class="big">Advanced Requirements:</th>
+        <th>Description</th>
+      </tr>
+      <tr>
+        <td>Interaction</td>
+        <td>
+          I’ll set selection areas, where user could choose which country to
+          display. I’ll create checkboxes to tick and modifiable charts.
+        </td>
+      </tr>
+      <tr>
+        <td>Form/poll</td>
+        <td>
+          I’ll create a separate area where users could enter inputs. A summary
+          of user inputs will display.
+        </td>
+      </tr>
+      <tr>
+        <td>Recommendations</td>
+        <td>
+          I’ll create a separate area where users could get recommendations
+          based on their preferences.
+        </td>
+      </tr>
+    </table>
+
+    <p>
+      <br />
+      <b>Social/ethical/moral considerations: </b><br /><br />
+
+      <i>Privacy:</i> No names or personal information will be displayed, only
+      overall statistics. <br /><br />
+      <i>Content Responsibility:</i> No harmful, biased, or misleading
+      information will be promoted. <br /><br />
+      <i>Accessibility:</i> my website will be accessible by all, regardless of
+      disabilities. It will have colourful charts, which are easy to read and
+      simple interface.
+    </p>
+    <br />
+    <table>
+      <tr>
+        <th class="tech">Technology</th>
+        <th>Role</th>
+      </tr>
+      <tr>
+        <td class="tech">Python</td>
+        <td class="role">
+          Cleaning, data analytics, visualisation and sending variables to
+          database.
+        </td>
+      </tr>
+      <tr>
+        <td class="tech">JavaScript</td>
+        <td class="role">
+          Visualising graphs, process user input and send it to database.
+        </td>
+      </tr>
+      <tr>
+        <td class="tech">CSS</td>
+        <td class="role">Establish alignment and design of website.</td>
+      </tr>
+      <tr>
+        <td class="tech">HTML</td>
+        <td class="role">Create website’s structure.</td>
+      </tr>
+      <tr>
+        <td class="tech">Firebase</td>
+        <td class="role">Store data analytics and user input.</td>
+      </tr>
+      <tr>
+        <td class="tech">Csv</td>
+        <td class="role">
+          Analyse dataset in csv file and use it for calculations.
+        </td>
+      </tr>
+      <tr>
+        <td class="tech">miro.com</td>
+        <td class="role">Create a flowchart and architecture diagram.</td>
+      </tr>
+      <tr>
+        <td class="tech">balsamiq.cloud</td>
+        <td class="role">
+          Create wireframe. It’s great for quick prototyping and design plan.
+        </td>
+      </tr>
+      <tr>
+        <td class="tech">Thonny</td>
+        <td class="role">It is easy to use and supports debugging.</td>
+      </tr>
+      <tr>
+        <td class="tech">VScode with live server</td>
+        <td class="role">
+          It supports HTML, JS, and CSS and has many extensions that speed up my
+          work.
+        </td>
+      </tr>
+    </table>
+    <br />
+    <h2>Architecture Diagram</h2>
+    <a href="arch.html">Architecture Diagram</a>
+    <h2>Flowchart</h2>
+    <a href="flowchart.html" target="_blank">Flowchart</a><br /><br />
+    <a href="Create.html" target="_blank" class="next"
+      >=========================>Create</a
+    >
+  </body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evaluation</title>
+  </head>
+  <body>
+    <nav class="nav">
+      <ul>
+        <li><a href="report.html">1. Meeting the brief</a></li>
+        <li><a href="./Investigation.html">2. Investigation</a></li>
+        <li><a href="./idea.html" target="_blank">Idea-flowchart</a></li>
+        <li>
+          <a href="./Plan_and_Design.html" target="_blank">3. Plan & Design</a>
+        </li>
+        <li><a href="wireframe.html" target="_blank">Wireframe</a></li>
+        <li><a href="arch.html">Architecture Diagram</a></li>
+        <li><a href="flowchart.html" target="_blank">Flowchart</a></li>
+        <li><a href="Create.html" target="_blank">4. Create</a></li>
+        <li><a href="Evaluation.html" target="_blank">5. Evaluation</a></li>
+      </ul>
+    </nav>
+    <style>
+      .nav {
+        background-color: rgb(239, 126, 126);
+        border-width: 1px 0;
+        text-align: center;
+      }
+      .nav li {
+        display: inline;
+      }
+      .nav a {
+        display: inline-block;
+        padding: 10px;
+        color: #000;
+      }
+      .nav a:hover {
+        background-color: #f0f0f0;
+        color: #007bff;
+      }
+      body {
+        background-color: blanchedalmond;
+      }
+      p,
+      ul,
+      ol,
+      img,
+      a,
+      h2,
+      li {
+        margin-left: 10px;
+      }
+      table {
+        width: 90%;
+        border-collapse: collapse;
+        margin: 20px;
+        text-align: center;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        vertical-align: top;
+      }
+      th {
+        background-color: #f5a5a5;
+      }
+      .align-left {
+        text-align: left;
+      }
+    </style>
+    <h1>Evaluation</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Requirements</th>
+          <th class="align-left">How I did it?</th>
+          <th>Met/not met</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>BR1.</b>Collect and prepare data</td>
+          <td class="align-left">
+            I found my <i>dataset</i> on <i>World-population-review</i> and
+            downloaded it as a CSV.<br /><br />
+            I <i>cleaned</i> data using pandas and stored it in Firebase.
+          </td>
+          <td><b>Yes!</b></td>
+        </tr>
+        <tr>
+          <td><b>BR2.</b>Data analytics and visualisation</td>
+          <td class="align-left">
+            I calculated density, standard deviation, predicted population, and
+            found % increase.<br /><br />
+            I used <i>Matplotlib</i> for three graphs representing analysis.
+          </td>
+          <td><b>Yes!</b></td>
+        </tr>
+        <tr>
+          <td><b>BR3.</b>Create basic website</td>
+          <td class="align-left">
+            I used HTML, JavaScript, CSS, and ChartJS to <i>visualize</i> charts
+            on the <i>website</i>.
+          </td>
+          <td><b>Yes!</b></td>
+        </tr>
+        <tr>
+          <td><b>AR1.</b>Graph Interactivity</td>
+          <td class="align-left">
+            I used <i>dropdown menus</i> and <i>checkboxes</i> and ensured
+            graphs update.<br />
+            <br />
+            I used <i>Firebase</i> to fetch data on the website.
+          </td>
+          <td><b>Yes!</b></td>
+        </tr>
+        <tr>
+          <td><b>AR2.</b>Form</td>
+          <td class="align-left">
+            I created a page with <i>questions</i> and showed <i>results</i> of
+            all users.<br />
+            <br />
+            I ensured <i>validation</i> on the inputs.
+          </td>
+          <td><b>Yes!</b></td>
+        </tr>
+        <tr>
+          <td><b>AR3.</b>Recommendations</td>
+          <td class="align-left">
+            I created a page with select options to <i>recommend</i> 10
+            countries.<br />
+            <br />
+            I selected the <i>displayed</i> countries using a score system.
+          </td>
+          <td><b>Yes!</b></td>
+        </tr>
+      </tbody>
+    </table>
+    <br />
+    <p><b>If I had more time I would make the following improvements:</b></p>
+
+    <h2><b>Improvement 1:</b></h2>
+    <p>
+      Create <b>filter</b> for chart1 which would sort countries’ densities in
+      ascending order and <b>display multiple countries</b> on one chart using
+      different lines.
+    </p>
+    <p>
+      This would make chart more flexible and informative, enhancing user’s
+      experience. Ascending order will help to identify patterns and see
+      countries with highest/lowest densities and better visualize data.
+    </p>
+
+    <h2><b>Improvement 2:</b></h2>
+    <p>
+      Ask <b>more questions</b> on recommendations page and suggest
+      <b>greater range</b> of countries.
+    </p>
+    <p>
+      This would enhance my understanding of user preferences, resulting in
+      better quality and accurate response.
+    </p>
+
+    <h2><b>Other application for my artefact:</b></h2>
+    <p><b>Comment posting and replies.</b></p>
+    <p>
+      On my form page, users can input comments, and my system could be adapted
+      to display these publicly, allowing interactions, instead of just storing
+      feedback. Such platform would create discussions, feedback exchange and
+      real-time conversations in the community.
+    </p>
+    <br /><br /><br />
+    <h2>References:</h2>
+    <ol>
+      <li>
+        <b>Interactive websites I analyzed:</b>
+        <ul>
+          <br />
+          <li>
+            <a
+              href="https://www.worldbank.org/en/programs/icp/brief/foodpricesfornutrition"
+              target="_blank"
+              >World-bank</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.worldometers.info/world-population/#google_vignette"
+              target="_blank"
+              >worldometers</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.prb.org/resources/understanding-population-projections-assumptions-behind-the-numbers/"
+              target="_blank"
+              >PRB</a
+            >
+          </li>
+        </ul>
+      </li>
+      <br />
+      <li>
+        <b>Datasets I analyzed:</b>
+        <ul>
+          <br />
+          <li>
+            <a href="https://worldpopulationreview.com/"
+              >World-population-review</a
+            >
+          </li>
+          <li>
+            <a
+              href="https://www.kaggle.com/datasets/iamsouravbanerjee/world-population-dataset"
+              >Kaggle</a
+            >
+          </li>
+          <li>
+            <a href="https://data.worldbank.org/indicator/SP.POP.TOTL"
+              >World-bank</a
+            >
+          </li>
+        </ul>
+      </li>
+    </ol>
+  </body>
+</html>

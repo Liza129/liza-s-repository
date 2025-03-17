@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create</title>
+  </head>
+  <body>
+     <nav class="nav">
+      <ul>
+        <li><a href="report.html">1. Meeting the brief</a></li>
+        <li><a href="./Investigation.html">2. Investigation</a></li>
+        <li><a href="./idea.html" target="_blank">Idea-flowchart</a></li>
+        <li>
+          <a href="./Plan_and_Design.html" target="_blank">3. Plan & Design</a>
+        </li>
+        <li><a href="wireframe.html" target="_blank">Wireframe</a></li>
+        <li><a href="arch.html">Architecture Diagram</a></li>
+        <li><a href="flowchart.html" target="_blank">Flowchart</a></li>
+        <li><a href="Create.html" target="_blank">4. Create</a></li>
+        <li><a href="Evaluation.html" target="_blank">5. Evaluation</a></li>
+      </ul>
+    </nav>
+    <style>
+        .nav {
+        background-color: rgb(239, 126, 126);
+        border-width: 1px 0;
+        text-align: center;
+      }
+      .nav li {
+        display: inline;
+      }
+      .nav a {
+        display: inline-block;
+        padding: 10px;
+        color: #000;
+      }
+      .nav a:hover {
+        background-color: #f0f0f0;
+        color: #007bff;
+      }
+      body {
+        background-color: antiquewhite;
+        font-size: 36;
+      }
+        p,
+      ul,
+      ol,
+      img,
+      a,
+      li {
+        margin-left: 10px;
+      }
+      .time{
+        height: auto;
+        display: block;
+        max-width: 30%;
+      }
+      .next {
+        display: block;
+        text-align: right;
+        font-weight: bold;
+        margin-right: 60px;
+        font-weight: bold;
+        text-decoration: none;
+        font-size: 35px;
+      }
+      img {
+        height: auto;
+        display: block;
+        max-width: 1000%;
+      }
+      table {
+        margin-top: 20px;
+        width: 90%;
+        border-collapse: collapse;
+        text-align: center;
+      }
+      th,
+      td {
+        border: 1px solid black;
+        padding: 8px;
+        vertical-align: top;
+      }
+      th {
+        background-color: #f5a5a5;
+      }
+       .week {
+            text-align: center;
+        }
+        .progress {
+            text-align: left;
+        }
+    </style>
+    <h1>Create</h1>
+    <h2>Timeline</h2>
+    <img class="time"
+      src="./images/Multicolor Professional Business Timeline Infographic (3).png"
+      alt=""
+    />
+   <table>
+        <tr>
+            <th class="week">Week</th>
+            <th class="week">Progress</th>
+        </tr>
+        <tr>
+            <td class="week">1</td>
+            <td class="progress">
+                <ul>
+                    <li>Identified 4 main ideas</li>
+                    <li>Searched datasets and identified pros and cons</li>
+                    <li>Searched other similar websites</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">2</td>
+            <td class="progress">
+                <ul>
+                    <li>Picked population dataset</li>
+                    <li>Planned the system work and analytics</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">3</td>
+            <td class="progress">
+                <ul>
+                    <li>Used pandas to clean dataset</li>
+                    <li>Stored clean data into dictionary and Firebase</li>
+                    <li>Created separate functions for analytics</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">4</td>
+            <td class="progress">
+                <ul>
+                    <li>Completed report: “Investigation” & “Plan & Design”</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">5</td>
+            <td class="progress">
+                <ul>
+                    <li>Introduced filters on website</li>
+                    <li>Saved inputs into variables</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">6</td>
+            <td class="progress">
+                <ul>
+                    <li>Carried out analytics for filtering in Python</li>
+                    <li>Sent them to Firebase</li>
+                    <li>Used matplotlib to visualize basic graphs</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">7</td>
+            <td class="progress">
+                <ul>
+                    <li>Created a form with questions</li>
+                    <li>Stored validated inputs and sent to Firebase</li>
+                    <li>Fetched all inputs from Firebase</li>
+                    <li>Displayed overall statistics</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">8</td>
+            <td class="progress">
+                <ul>
+                    <li>Created recommendations with options to select</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">9</td>
+            <td class="progress">
+                <ul>
+                    <li>Completed report: “Create” & “Evaluation”</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">10</td>
+            <td class="progress">
+                <ul>
+                    <li>Tested all graphs, fixed bugs</li>
+                    <li>Checked inputs/output</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">11</td>
+            <td class="progress">
+                <ul>
+                    <li>Recorded video</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td class="week">12</td>
+            <td class="progress">
+                <ul>
+                    <li>Checked everything was working and met all requirements of brief</li>
+                </ul>
+            </td>
+        </tr>
+    </table>
+    <h2>Testing</h2>
+    <p>
+      <b>Unit testing: </b><br /><br />
+
+      Function which updates chart 2 when checkboxes are ticked and shows all
+      countries by default.
+      <br /><br />
+      Function gettingChart2() fetches data from firebase and calls
+      updateChart2().
+    </p>
+    <img src="./images/Screenshot 2025-03-08 122045.png" alt="" />
+    <p>Current <b> test-table:</b></p>
+    <br />
+    <table>
+      <tr>
+        <th>Test number</th>
+        <th>Checkboxes ticked</th>
+        <th>Expected output</th>
+        <th>Output</th>
+        <th>Test pass</th>
+      </tr>
+      <tr>
+        <td>1</td>
+        <td>none</td>
+        <td>World’s variation</td>
+        <td>expected</td>
+        <td>Yes</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td>EU</td>
+        <td>World’s+EU</td>
+        <td>World's only</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td>Non-EU</td>
+        <td>World’s+non-EU</td>
+        <td>World's only</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td>both</td>
+        <td>World’s+EU+non-EU</td>
+        <td>World's only</td>
+        <td>No</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td>Untick</td>
+        <td>World’s variation</td>
+        <td>World's only</td>
+        <td>Yes</td>
+      </tr>
+    </table>
+    <br>
+    <p>    There are multiple <b>issues</b>:
+    <ol>
+        <li>User’s choice is not stored/checked.</li>
+        <li>EU/non-EU aren’t shown according to user’s choice.</li>
+        <li>Each bar in dataset doesn’t have a unique label/colour.</li>
+        <li>Instead of creating a new chart, the old one should be updated.</li>
+    </ol>
+
+   <p><b>How I fixed it?</b></p> 
+    <p>I created a variable which would store user choice:</p>
+</p>
+<img src="./images/Screenshot 2025-03-08 123139.png" alt="">
+<p>And checked its value using console. </p>
+<img src="./images/Screenshot 2025-03-08 123614.png" alt="">
+<p>I initialized object newDatasets to store data for updating chart. It has label and dataset for default chart. If EU/non-EU option was selected, it was added to object, ensuring when checkbox ticked, object updated. </p>
+  
+<img src="./images/Screenshot 2025-03-08 124116.png" alt="">
+<p>I set an if/else condition to check if chart already exists: </p>
+<img src="./images/Screenshot 2025-03-08 152058.png" alt="">
+<p>If it exists: old chart updated, otherwise new one created. </p>
+<p>I combined final <b>test table</b> to ensure that all tests are passed. </p>
+ <table>
+        <tr>
+            <th>Test number</th>
+            <th>Checkboxes ticked</th>
+            <th>Expected output</th>
+            <th>Output</th>
+            <th>Test pass</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>none</td>
+            <td>World’s variation</td>
+            <td>expected</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>EU</td>
+            <td>World’s+EU</td>
+            <td>expected</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>Non-EU</td>
+            <td>World’s+non-EU</td>
+            <td>expected</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>both</td>
+            <td>World’s+EU+non-EU</td>
+            <td>expected</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>Untick</td>
+            <td>World’s variation</td>
+            <td>World's only</td>
+            <td>Yes</td>
+        </tr>
+    </table>
+    <br><br><br>
+<h2><b>Regression testing: </b></h2>
+<p>Adding validation in the form on the age input and making only numbers acceptable or no value.  </p>
+<img src="./images/Screenshot 2025-03-15 210211.png" alt="">
+<p>Current function accepts text input in age field and saves it as null.</p>
+<p>Current <b>test table:</b></p>
+ <table>
+        <tr>
+            <th>Test number</th>
+            <th>Input</th>
+            <th>Expected output</th>
+            <th>Output</th>
+            <th>Correctly updated results</th>
+            <th>Test pass</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>“26”</td>
+            <td>accept</td>
+            <td>accept</td>
+            <td>yes</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>“0”</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>“-54”</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>“5.4”</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>“132”</td>
+            <td>accept</td>
+            <td>accept</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>“ten”</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No updation</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>“false”</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No updation</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>“Meow”</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No updation</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>None</td>
+            <td>accept</td>
+            <td>accept</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td>[23,54,32]</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No updation</td>
+            <td>No</td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td>“456”</td>
+            <td>Invalid_input</td>
+            <td>accept</td>
+            <td>No updation</td>
+            <td>No</td>
+        </tr>
+    </table><br>
+<p><b>Impact of test table? </b></p>
+<ul>
+        <li>Artefact accepts all input, even those that should be marked invalid.</li>
+        <li>Expected outcome was to reject non-numeric, negative, or float inputs.</li>
+        <li>Invalid inputs didn't update results.</li>
+        <li>System should reject all invalid inputs.</li>
+    </ul>
+<br>
+<p><b>Major problem1: </b></p>
+<p><i>System accepts all inputs. </i></p>
+<br><p><b>How I approached this? </b></p>
+<p>I added a paragraph tag to show errors to users, if NaN was entered. </p>
+<img src="./images/Screenshot 2025-03-15 210300.png" alt="">
+<p>I set an onclick feature to submit button. </p>
+<img src="./images/Screenshot 2025-03-15 210307.png" alt="">
+<p>I created a function which would show appropriate message to the user: </p>
+<img src="./images/Screenshot 2025-03-15 210319.png" alt="">
+<p>However, I faced with a problem of onclick feature causing ReferenceError, so I replaced it with eventListeners(). </p>
+<img src="./images/Screenshot 2025-03-15 210328.png" alt="">
+<p>This resulted in Updatingdatabase() not being called due to 2 eventListeners(). 
+<br><br>
+Therefore, I deleted Updatingdatabase eventListener and put its function call inside of myFunction(). </p>
+<img src="./images/Screenshot 2025-03-15 210337.png" alt="">
+<p>There were no errors, however when a valid input was entered, unwanted message appeared. </p>
+<img src="./images/Screenshot 2025-03-15 210346.png" alt="">
+<p>I set text to “” if valid input was entered. </p>
+<img src="./images/Screenshot 2025-03-15 210356.png" alt="">
+<p>I added more conditions for validation: </p>
+<img src="./images/Screenshot 2025-03-15 210414.png" alt="">
+<p><b>Major problem2: </b></p>
+<p>I got <b>NaN%</b> in <b>“Results”</b> when radio was not filled in.  </p>
+<img src="./images/Screenshot 2025-03-15 210426.png" alt="">
+<p>Such output could occur due to division by 0: </p>
+<img src="./images/Screenshot 2025-03-15 210434.png" alt="">
+<p> In this function: </p>
+<img src="./images/Screenshot 2025-03-15 210607.png" alt="">
+<p>I handled this issue before by specifying if length of list is 0, return 0%.</p>
+<img src="./images/Screenshot 2025-03-15 210629.png" alt="">
+<p>NaN% should occur only when there is no previous answer submitted, I specified the return to be 0 if output is NaN.  </p>
+<img src="./images/Screenshot 2025-03-15 210638.png" alt="">
+
+<p>Final function looked like: </p>
+<img src="./images/Screenshot 2025-03-15 210720.png" alt="">
+<p>Final <b>test table: </b> </p>
+    <table>
+        <tr>
+            <th>Test number</th>
+            <th>Input</th>
+            <th>Expected output</th>
+            <th>Output</th>
+            <th>Correctly updated results</th>
+            <th>Test pass</th>
+        </tr>
+        <tr>
+            <td>1</td>
+            <td>“7”</td>
+            <td>accept</td>
+            <td>accept</td>
+            <td>yes</td>
+            <td>Yes</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>“0”</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <td>“-18”</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <td>“12.8”</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <td>“176”</td>
+            <td>accept</td>
+            <td>accept</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <td>“five”</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <td>“true”</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <td>“Hi”</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <td>None</td>
+            <td>accept</td>
+            <td>accept</td>
+            <td>yes</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <td>[14,67,98]</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+        <tr>
+            <td>11</td>
+            <td>“256”</td>
+            <td>Invalid_input</td>
+            <td>Invalid_input</td>
+            <td>No updation</td>
+            <td>yes</td>
+        </tr>
+    </table>
+<p><b>All tests passed! </b></p><br><br>
+<h2>Problems</h2>
+<p><b>Major problem</b> for me was to format each countries’ density into dictionary without breaking the order. </p>
+<img src="./images/1.png" alt="">
+<p>Challenge was to map densities to their respective countries. 
+<br>
+I used a separate function: </p>
+<img src="./images/2.png" alt="">
+<p>When it was run, I got an error on line 165:</p>
+<img src="./images/3.png" alt="">
+<p>KeyError helped me to understand the problem, as each key in obj_firebase_density_countries should be a country, not a year. 
+<br><br>
+I added for loop to set each country as a key: </p>
+<img src="./images/4.png" alt="">
+<p>Also, added another for loop to go through each key and append respective density: </p>
+<img src="./images/5.png" alt="">
+<p>I replaced [key] with [i], as  ”key" is a key in density_of_each_c_obj:</p>
+<img src="./images/6.png" alt="">
+<p>Then I realised that each country had the same density:</p>
+<img src="./images/7.png" alt="">
+<p>This is because c is a constant, so I added 1 to it in the loop: </p>
+<img src="./images/8.png" alt="">
+<p>After next run I got an indexError: </p>
+<img src="./images/9.png" alt="">
+<p>c wasn’t updated in the first loop, increasing from its initial value as loop processes new values. Moving it inside the loop fixed this.</p><img src="" alt="">
+<img src="./images/10.png" alt="">
+<p>The final output was in the correct format: </p>
+<img src="./images/11.png" alt="">
+
+<br><br><br>
+<h2>Code explanation/pseudocode for analysis of co-ordinates for chart 1:</h2>
+<img src="./images/the one.png" alt="">
+<p>Initiate list total_pop_l to store total population of the world during 5 years.  </p>
+<img src="./images/12.png" alt="">
+<p>For loop goes through list of keys, which has only populations as values of all countries.</p>
+
+<img src="./images/13.png" alt="">
+<p>Function call ave_tot_pop_F has 2 returns, but we need only second one - “This”.</p>
+
+<img src="./images/14.png" alt="">
+<p>Called function calculates total population of all countries in given year ”i”.</p>
+
+<img src="./images/15.png" alt="">
+<p>For loop goes through each value in dictionary with key “i” from l_col_names, which was passed as an argument in function call.</p>
+
+<img src="./images/16.png" alt="">
+<p>Each countries’ population is added up to form total population.</p>
+
+<img src="./images/17.png" alt="">
+<p>Coming back to original function total population appends to total_pop_l list.</p>
+
+<img src="./images/18.png" alt="">
+<p>Function tot_land_F() is called to calculate total land area of all countries. It is the same in each year, so no for loop needed.</p>
+
+<img src="./images/19.png" alt="">
+<p>Function goes through each countries’ land area and adds it to total area in sum_land variable.</p>
+
+<img src="./images/20.png" alt="">
+<p>The return value is stored in variable land.  
+<br><br>
+I initiated list density_l to store y-axis co-ordinates of graph1.</p>
+
+<img src="./images/21.png" alt="">
+<p>For loop then goes through each value in total_pop_l.</p>
+
+<img src="./images/22.png" alt="">
+<p>Function formula_den_F() is called storing return value in variable dens.</p>
+
+<img src="./images/23.png" alt="">
+<p>Function divides population by land area to get density.</p>
+
+<img src="./images/24.png" alt="">
+<p>Return is appended into y-axis list.</p>
+
+<img src="./images/25.png" alt="">
+<p>Original function returns x-axis and y-axis of the graph to plot, as well as total_pop_l for further use in other calculations.</p>
+<img src="./images/26.png" alt="">
+<p><b>Why this approached? </b></p>
+ <ul>
+        <li>Follows structured process, easier debugging.</li>
+        <li>Separate functions: break the problem, reducing errors, increasing readability.</li>
+        <li>For-loops go through each country, ensuring all countries accounted.</li>
+    </ul>
+  <p><b> 
+
+ Other approaches: </b></p>  
+     <ol>
+        <li>Single loop calculating density instead of separate functions.</li>
+        <li>Dictionaries instead of lists.</li>
+    </ol>
+    <p><b>Why weren’t used?  </b></p>
+    <p>Difficulty in modifying functions, harder debugging, reduced flexibility if using dictionaries, less reusability. </p>
+
+<a href="Evaluation.html" target="_blank"class="next"
+      >=========================>Evaluation</a>
+  </body>
+</html>
+

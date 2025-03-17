@@ -166,10 +166,12 @@ const firebaseConfig = {
   formsubmission.addEventListener('submit', gettingrecommendations);
 
 
-  function cheking_density(list_score,density_alp,density_alp_less_10k,density_alp_more_10k,density){
+  function cheking_density(list_score,density_alp,
+  density_alp_less_10k,density_alp_more_10k,density){
     //console.log(density)
 
-    //checks the density question and adds a score to countries with range of density selected by user
+    //checks the density question and adds a score to 
+    // countries with range of density selected by user
     if (density == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -185,11 +187,12 @@ const firebaseConfig = {
     }else{
         console.log("errorororoor")
     }
-return list_score
+    return list_score
   }
 
    function cheking_eu(list_score,eu,eu_c,non_eu_c){
-      //checks the EU/non-EU question and adds score to countries with  selected membership
+      //checks the EU/non-EU question and adds 
+      // score to countries with  selected membership
       if (eu == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -208,8 +211,10 @@ return list_score
     return list_score
    }
 
-    function cheking_rate(list_score,rate,growth_rate_not_alp_neg,growth_rate_not_alp_pos){
-     // checks the growth rate question and adds score to countries with specified rate selected by user
+    function cheking_rate(list_score,rate,growth_rate_not_alp_neg,
+    growth_rate_not_alp_pos){
+     // checks the growth rate question and adds score to 
+     // countries with specified rate selected by user
       if (rate == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -227,7 +232,8 @@ return list_score
    }
 
    function cheking_pop(list_score,pop,pop_not_alp_10,pop_not_alp_140){
-     //checks the population question and adds score to countries with range of population selected by user
+     //checks the population question and adds score to 
+     // countries with range of population selected by user
       if (pop == "all"){
       for (let i in list_score){
         list_score[i] += 1
@@ -452,7 +458,7 @@ margin-left: 20px;
         background: white;
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 2px 8px rgba(18, 0, 52, 0.1);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         margin-bottom: 20px;
         margin-top: 20px;
       }
@@ -462,7 +468,7 @@ margin-left: 20px;
         width: 100%;
         padding: 10px;
         border: 1px solid #ccc;
-         box-shadow: 0 2px 8px rgb(5, 5, 18);
+         box-shadow: 0 2px 8px rgb(115, 115, 247);
         border-radius: 5px;
         font-size: 16px;
         margin-top: 20px;
